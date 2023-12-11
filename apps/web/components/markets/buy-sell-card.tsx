@@ -11,10 +11,12 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { MarketType } from "@/models/Market.model";
 
 const BuySellCard = ({
   selectedMarketOption,
   selectedAction,
+  marketType,
 }: {
   selectedMarketOption: {
     label: string;
@@ -22,6 +24,7 @@ const BuySellCard = ({
     price: number;
   };
   selectedAction: BetAction;
+  marketType: MarketType
 }) => {
   const [currentAction, setCurrentAction] = useState<BetAction>(selectedAction);
   const [amount, setAmount] = useState<number>(0);
@@ -29,9 +32,9 @@ const BuySellCard = ({
   return (
     <>
       <div className="flex flex-col rounded-2xl border p-8 shadow-[0_4px_20px_0px_rgb(0,0,0,0.05)]">
-        <span className="pb-4 text-2xl font-semibold">
+        {marketType === MarketType.MULTIPLE_CHOICE && <span className="pb-4 text-2xl font-semibold">
           {selectedMarketOption.label}
-        </span>
+        </span>}
         <Tabs defaultValue="Buy" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="Buy">Buy</TabsTrigger>
