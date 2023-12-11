@@ -2,7 +2,7 @@ import { SettingsMenu } from "@/components/settings/settings-menu";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Settings | DPM",
+  title: "Settings | PEEK",
 };
 
 const sidebarNavItems = [

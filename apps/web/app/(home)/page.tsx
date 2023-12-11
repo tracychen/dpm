@@ -3,7 +3,7 @@ import HomeBanner from "@/components/home/home-banner";
 import TrendingMarkets from "@/components/home/trending-markets";
 
 export const metadata = {
-  title: "Home | DPM",
+  title: "Home | PEEK",
 };
 
 export default async function HomePage() {
