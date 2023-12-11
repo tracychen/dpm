@@ -1,11 +1,12 @@
 "use client";
 
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { buttonVariants } from "../ui/button";
-import { cn } from "@/lib/utils";
-import { redirect } from "next/navigation";
+import { Button } from "../ui/button";
+import { redirect, useRouter } from "next/navigation";
 
 export default function WalletConnectButton() {
+
+  const router = useRouter();
   return (
     <>
       <ConnectButton.Custom>
@@ -24,19 +25,19 @@ export default function WalletConnectButton() {
             (!authenticationStatus || authenticationStatus === "authenticated");
 
           if (connected) {
-            redirect("/");
+            router.refresh();
           }
 
           return (
             <>
               {!connected ? (
-                <button
+                <Button
                   onClick={openConnectModal}
-                  type="button"
-                  className={cn(buttonVariants())}
+                  variant="default"
+                  size="full"
                 >
                   Connect Wallet
-                </button>
+                </Button>
               ) : (
                 <div className="flex justify-center">
                   <ConnectButton chainStatus={"none"} showBalance={false} />
