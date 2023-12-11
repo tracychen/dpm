@@ -9,6 +9,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@dpm/database": "*",
     "@hookform/resolvers": "^3.1.1",
     "@next/font": "^14.0.4",
     "@phosphor-icons/react": "^2.0.15",

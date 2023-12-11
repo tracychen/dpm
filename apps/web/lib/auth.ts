@@ -1,15 +1,12 @@
+import { prisma } from "@dpm/database";
 import { NextAuthOptions, SessionStrategy } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { getCsrfToken } from "next-auth/react";
 import { SiweMessage } from "siwe";
-import alchemy from "./alchemy";
 
 export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt" as SessionStrategy,
-  },
-  pages: {
-    signIn: "/login",
   },
   providers: [
     CredentialsProvider({
@@ -29,7 +26,7 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials, req) {
         try {
           const siwe = new SiweMessage(
-            JSON.parse(credentials?.message || "{}")
+            JSON.parse(credentials?.message || "{}"),
           );
           // eslint-disable-next-line turbo/no-undeclared-env-vars
           const nextAuthUrl = new URL(process.env.NEXTAUTH_URL!);
@@ -43,20 +40,21 @@ export const authOptions: NextAuthOptions = {
           if (!result.success) {
             return null;
           }
-          // TODO check if user exists backend
-          let user = null;
+          const user = await prisma.user.findUnique({
+            where: {
+              evmAddress: siwe.address.toLowerCase(),
+            },
+          });
           if (!user) {
             // create user
             // const ens = await alchemy.core.lookupAddress(
-            //   siwe.address.toLowerCase()
+            //   siwe.address.toLowerCase(),
             // );
-            // TODO persist user in backend. get ens?
-            const newUser = {
-              id: siwe.address,
-              evmAddress: siwe.address,
-              // ens: ens || siwe.address,
-              imageUrl: `https://avatars.dicebear.com/api/identicon/${siwe.address}.svg`,
-            };
+            const newUser = await prisma.user.create({
+              data: {
+                evmAddress: siwe.address.toLowerCase(),
+              },
+            });
             return newUser;
           }
           return user;

@@ -10,13 +10,30 @@ import { useState } from "react";
 import Link from "next/link";
 import { BetAction } from "@/models/Bet.model";
 import { OrderAction } from "@/models/Order.model";
+import { Post, Reaction, User } from "@dpm/database";
+import { MarketPosts } from "./market-posts";
+import { NewPostDialog } from "./new-post-dialog";
+import { User as NextAuthUser } from "next-auth";
 
-const ViewMarket = ({ market }: { market: Market }) => {
+const ViewMarket = ({
+  market,
+  posts,
+  currentUser,
+}: {
+  market: Market;
+  posts: (Post & {
+    reactions: Reaction[];
+    user: User;
+  })[];
+  currentUser: NextAuthUser;
+}) => {
   const [selectedMarketOption, setSelectedMarketOption] = useState(
     market.options[0],
   );
   const [selectedBetAction, setSelectedBetAction] = useState(BetAction.YES);
-  const [selectedOrderAction, setSelectedOrderAction] = useState(OrderAction.BUY);
+  const [selectedOrderAction, setSelectedOrderAction] = useState(
+    OrderAction.BUY,
+  );
 
   return (
     <>
@@ -87,7 +104,8 @@ const ViewMarket = ({ market }: { market: Market }) => {
             market.options.map((option, index) => (
               <div key={index}>
                 <Separator className="my-4" />
-                <MarketOptionItem marketOption={option}
+                <MarketOptionItem
+                  marketOption={option}
                   setSelectedMarketOption={setSelectedMarketOption}
                   setSelectedBetAction={setSelectedBetAction}
                   // TODO should use id instead of label
@@ -134,6 +152,16 @@ const ViewMarket = ({ market }: { market: Market }) => {
                 </div>
               </div>
             </div>
+          </div>
+          <Separator className="my-6" />
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <span className="text-2xl font-semibold">
+                What people are saying
+              </span>
+              <NewPostDialog marketId={market.id} />
+            </div>
+            <MarketPosts posts={posts} currentUser={currentUser} />
           </div>
           <Separator className="my-6" />
           <div className="grid grid-cols-2">

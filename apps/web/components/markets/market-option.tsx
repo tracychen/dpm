@@ -13,17 +13,17 @@ const MarketOptionItem = ({
   setSelectedBetAction,
   isSelected,
   selectedBetAction,
-  selectedOrderAction
+  selectedOrderAction,
 }: {
-  marketOption: MarketOption,
-  isSelected: boolean,
-  selectedBetAction: BetAction,
+  marketOption: MarketOption;
+  isSelected: boolean;
+  selectedBetAction: BetAction;
   setSelectedMarketOption: (marketOption: MarketOption) => void;
   setSelectedBetAction: (betAction: BetAction) => void;
   selectedOrderAction: OrderAction;
 }) => {
   const [showAdditionalData, setShowAdditionalData] = useState(false);
-  
+
   return (
     <>
       <div
@@ -38,10 +38,14 @@ const MarketOptionItem = ({
           </div>
         </div>
         <div className="flex items-center gap-x-4">
-          {/* TODO on click and dont expand */}
           <Button
             variant="positive"
-            className={cn("z-5 w-44", isSelected && selectedBetAction === BetAction.YES && "text-primary-foreground bg-green-700")}
+            className={cn(
+              "z-5 w-44",
+              isSelected &&
+                selectedBetAction === BetAction.YES &&
+                "bg-green-700 text-primary-foreground",
+            )}
             size="full"
             onClick={(e) => {
               setSelectedMarketOption(marketOption);
@@ -49,11 +53,18 @@ const MarketOptionItem = ({
               e.stopPropagation();
             }}
           >
-            <span>{selectedOrderAction} Yes, ${marketOption.price}</span>
+            <span>
+              {selectedOrderAction} Yes, ${marketOption.price}
+            </span>
           </Button>
           <Button
             variant="negative"
-            className={cn("z-5 w-44", isSelected && selectedBetAction === BetAction.NO && "text-primary-foreground bg-red-700")}
+            className={cn(
+              "z-5 w-44",
+              isSelected &&
+                selectedBetAction === BetAction.NO &&
+                "bg-red-700 text-primary-foreground",
+            )}
             size="full"
             onClick={(e) => {
               setSelectedMarketOption(marketOption);
@@ -61,7 +72,9 @@ const MarketOptionItem = ({
               e.stopPropagation();
             }}
           >
-            <span>{selectedOrderAction} No, ${marketOption.price}</span>
+            <span>
+              {selectedOrderAction} No, ${marketOption.price}
+            </span>
           </Button>
         </div>
       </div>

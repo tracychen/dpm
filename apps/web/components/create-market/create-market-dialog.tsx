@@ -18,13 +18,6 @@ import { useState } from "react";
 import { UseFormReturn, useForm } from "react-hook-form";
 import { toast } from "../ui/use-toast";
 import { cn } from "@/lib/utils";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@radix-ui/react-select";
 import { Textarea } from "../ui/textarea";
 import { Icons } from "../icons";
 import { DatePicker } from "../ui/date-picker";

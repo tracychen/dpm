@@ -12,7 +12,7 @@ export const tags: string[] = [
 
 export const markets: Market[] = [
   {
-    id: "1",
+    id: "xyz456",
     prompt: "Harvard application numbers",
     percentChance: 41,
     change: "0.6",
@@ -25,15 +25,15 @@ export const markets: Market[] = [
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
     type: MarketType.BINARY,
     options: [
-        {
-          label: "[TODO] binary layout",
-          amountBet: 45000,
-          price: 0.5,
-        },
-    ]
+      {
+        label: "[TODO] binary layout",
+        amountBet: 45000,
+        price: 0.5,
+      },
+    ],
   },
   {
-    id: "2",
+    id: "abc123",
     prompt: "University presidents ousted",
     percentChance: 35,
     change: "0.6",
@@ -64,7 +64,7 @@ export const markets: Market[] = [
     type: MarketType.MULTIPLE_CHOICE,
   },
   {
-    id: "3",
+    id: "def678",
     prompt: "Time's person of the year",
     percentChance: 92,
     change: "3.5",
@@ -95,7 +95,7 @@ export const markets: Market[] = [
     type: MarketType.MULTIPLE_CHOICE,
   },
   {
-    id: "4",
+    id: "wxy890",
     prompt: "Trump and Biden both win a nomination?",
     percentChance: 92,
     change: "3.5",
@@ -108,15 +108,15 @@ export const markets: Market[] = [
     description:
       "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
     options: [
-        {
-          label: "[TODO] binary layout",
-          amountBet: 45000,
-          price: 0.5,
-        },
-    ]
+      {
+        label: "[TODO] binary layout",
+        amountBet: 45000,
+        price: 0.5,
+      },
+    ],
   },
   {
-    id: "5",
+    id: "rst012",
     prompt: "Time's person of the year",
     percentChance: 92,
     change: "3.5",
