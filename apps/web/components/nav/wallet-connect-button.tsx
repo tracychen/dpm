@@ -5,7 +5,6 @@ import { Button } from "../ui/button";
 import { redirect, useRouter } from "next/navigation";
 
 export default function WalletConnectButton() {
-
   const router = useRouter();
   return (
     <>
@@ -31,13 +30,22 @@ export default function WalletConnectButton() {
           return (
             <>
               {!connected ? (
-                <Button
-                  onClick={openConnectModal}
-                  variant="default"
-                  size="full"
-                >
-                  Connect Wallet
-                </Button>
+                <>
+                  <Button
+                    onClick={openConnectModal}
+                    className="rounded-full"
+                    variant="outline"
+                  >
+                    Create Market
+                  </Button>
+                  <Button
+                    onClick={openConnectModal}
+                    variant="default"
+                    size="full"
+                  >
+                    Connect Wallet
+                  </Button>
+                </>
               ) : (
                 <div className="flex justify-center">
                   <ConnectButton chainStatus={"none"} showBalance={false} />
