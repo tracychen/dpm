@@ -38,9 +38,12 @@ model Post {
 
   // Post
   body String?
+  marketId String? 
 
   // Reactions
   reactions Reaction[]
+  
+  @@index([marketId], name: "marketId")
 }
 
 model Reaction {
