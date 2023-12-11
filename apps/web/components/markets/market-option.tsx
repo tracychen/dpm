@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { MarketOption } from "@/models/Market.model";
 import { BetAction } from "@/models/Bet.model";
 import { cn } from "@/lib/utils";
+import { OrderAction } from "@/models/Order.model";
 
 const MarketOptionItem = ({
   marketOption,
@@ -12,12 +13,14 @@ const MarketOptionItem = ({
   setSelectedBetAction,
   isSelected,
   selectedBetAction,
+  selectedOrderAction
 }: {
   marketOption: MarketOption,
   isSelected: boolean,
   selectedBetAction: BetAction,
   setSelectedMarketOption: (marketOption: MarketOption) => void;
   setSelectedBetAction: (betAction: BetAction) => void;
+  selectedOrderAction: OrderAction;
 }) => {
   const [showAdditionalData, setShowAdditionalData] = useState(false);
   
@@ -46,7 +49,7 @@ const MarketOptionItem = ({
               e.stopPropagation();
             }}
           >
-            <span>Buy Yes, ${marketOption.price}</span>
+            <span>{selectedOrderAction} Yes, ${marketOption.price}</span>
           </Button>
           <Button
             variant="negative"
@@ -58,7 +61,7 @@ const MarketOptionItem = ({
               e.stopPropagation();
             }}
           >
-            <span>Buy No, ${marketOption.price}</span>
+            <span>{selectedOrderAction} No, ${marketOption.price}</span>
           </Button>
         </div>
       </div>

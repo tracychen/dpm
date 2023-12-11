@@ -9,12 +9,14 @@ import { BuySellCard } from "./buy-sell-card";
 import { useState } from "react";
 import Link from "next/link";
 import { BetAction } from "@/models/Bet.model";
+import { OrderAction } from "@/models/Order.model";
 
 const ViewMarket = ({ market }: { market: Market }) => {
   const [selectedMarketOption, setSelectedMarketOption] = useState(
     market.options[0],
   );
   const [selectedBetAction, setSelectedBetAction] = useState(BetAction.YES);
+  const [selectedOrderAction, setSelectedOrderAction] = useState(OrderAction.BUY);
 
   return (
     <>
@@ -91,6 +93,7 @@ const ViewMarket = ({ market }: { market: Market }) => {
                   // TODO should use id instead of label
                   isSelected={selectedMarketOption.label === option.label}
                   selectedBetAction={selectedBetAction}
+                  selectedOrderAction={selectedOrderAction}
                 />
               </div>
             ))
@@ -151,6 +154,8 @@ const ViewMarket = ({ market }: { market: Market }) => {
             selectedMarketOption={selectedMarketOption}
             marketType={market.type}
             setSelectedAction={setSelectedBetAction}
+            setSelectedOrderAction={setSelectedOrderAction}
+            selectedOrderAction={selectedOrderAction}
           />
         </div>
       </div>
