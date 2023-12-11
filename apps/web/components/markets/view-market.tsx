@@ -4,15 +4,17 @@ import { Market, MarketType } from "@/models/Market.model";
 import { Icons } from "../icons";
 import { cn } from "@/lib/utils";
 import { Separator } from "../ui/separator";
-import { MarketOption } from "./market-option";
+import { MarketOptionItem } from "./market-option";
 import { BuySellCard } from "./buy-sell-card";
 import { useState } from "react";
 import Link from "next/link";
+import { BetAction } from "@/models/Bet.model";
 
 const ViewMarket = ({ market }: { market: Market }) => {
   const [selectedMarketOption, setSelectedMarketOption] = useState(
     market.options[0],
   );
+  const [selectedBetAction, setSelectedBetAction] = useState(BetAction.YES);
 
   return (
     <>
@@ -83,7 +85,13 @@ const ViewMarket = ({ market }: { market: Market }) => {
             market.options.map((option, index) => (
               <div key={index}>
                 <Separator className="my-4" />
-                <MarketOption marketOption={option} />
+                <MarketOptionItem marketOption={option}
+                  setSelectedMarketOption={setSelectedMarketOption}
+                  setSelectedBetAction={setSelectedBetAction}
+                  // TODO should use id instead of label
+                  isSelected={selectedMarketOption.label === option.label}
+                  selectedBetAction={selectedBetAction}
+                />
               </div>
             ))
           )}
@@ -139,8 +147,10 @@ const ViewMarket = ({ market }: { market: Market }) => {
 
         <div className="flex w-1/3 flex-col">
           <BuySellCard
-            selectedAction="Yes"
+            selectedAction={selectedBetAction}
             selectedMarketOption={selectedMarketOption}
+            marketType={market.type}
+            setSelectedAction={setSelectedBetAction}
           />
         </div>
       </div>

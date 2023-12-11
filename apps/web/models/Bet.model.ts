@@ -1,4 +1,7 @@
-type BetAction = "Yes" | "No";
+enum BetAction {
+    YES = 'Yes',
+    NO = 'No',
+}
 
 interface Bet {
   id: number;
@@ -9,4 +12,4 @@ interface Bet {
   // TODO adjust this
 }
 
-export { type Bet, type BetAction };
+export { type Bet, BetAction };

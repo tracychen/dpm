@@ -2,17 +2,25 @@ import { useState } from "react";
 import { Icons } from "../icons";
 import { Button } from "../ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { MarketOption } from "@/models/Market.model";
+import { BetAction } from "@/models/Bet.model";
+import { cn } from "@/lib/utils";
 
-const MarketOption = ({
+const MarketOptionItem = ({
   marketOption,
+  setSelectedMarketOption,
+  setSelectedBetAction,
+  isSelected,
+  selectedBetAction,
 }: {
-  marketOption: {
-    label: string;
-    amountBet: number;
-    price: number;
-  };
+  marketOption: MarketOption,
+  isSelected: boolean,
+  selectedBetAction: BetAction,
+  setSelectedMarketOption: (marketOption: MarketOption) => void;
+  setSelectedBetAction: (betAction: BetAction) => void;
 }) => {
   const [showAdditionalData, setShowAdditionalData] = useState(false);
+  
   return (
     <>
       <div
@@ -30,9 +38,11 @@ const MarketOption = ({
           {/* TODO on click and dont expand */}
           <Button
             variant="positive"
+            className={cn("z-5 w-44", isSelected && selectedBetAction === BetAction.YES && "text-primary-foreground bg-green-700")}
             size="full"
-            className="z-5 w-44"
             onClick={(e) => {
+              setSelectedMarketOption(marketOption);
+              setSelectedBetAction(BetAction.YES);
               e.stopPropagation();
             }}
           >
@@ -40,9 +50,11 @@ const MarketOption = ({
           </Button>
           <Button
             variant="negative"
+            className={cn("z-5 w-44", isSelected && selectedBetAction === BetAction.NO && "text-primary-foreground bg-red-700")}
             size="full"
-            className="z-5 w-44"
             onClick={(e) => {
+              setSelectedMarketOption(marketOption);
+              setSelectedBetAction(BetAction.NO);
               e.stopPropagation();
             }}
           >
@@ -69,4 +81,4 @@ const MarketOption = ({
   );
 };
 
-export { MarketOption };
+export { MarketOptionItem };

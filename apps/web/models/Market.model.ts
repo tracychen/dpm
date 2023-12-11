@@ -3,6 +3,12 @@ enum MarketType {
   MULTIPLE_CHOICE = "mulipleChoice",
 }
 
+interface MarketOption {
+    label: string;
+    amountBet: number;
+    price: number;
+}
+
 interface Market {
   id: string;
   prompt: string;
@@ -14,12 +20,8 @@ interface Market {
   bettedCount: number;
   tag: string;
   imageUrl?: string;
-  options?: {
-    label: string;
-    amountBet: number;
-    price: number;
-  }[];
+  options?: MarketOption[];
   type: MarketType;
 }
 
-export { type Market, MarketType };
+export { type Market, type MarketOption, MarketType };

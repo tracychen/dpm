@@ -17,6 +17,7 @@ const BuySellCard = ({
   selectedMarketOption,
   selectedAction,
   marketType,
+    setSelectedAction,
 }: {
   selectedMarketOption: {
     label: string;
@@ -25,8 +26,8 @@ const BuySellCard = ({
   };
   selectedAction: BetAction;
   marketType: MarketType
+  setSelectedAction: (action: BetAction) => void;
 }) => {
-  const [currentAction, setCurrentAction] = useState<BetAction>(selectedAction);
   const [amount, setAmount] = useState<number>(0);
 
   return (
@@ -58,11 +59,11 @@ const BuySellCard = ({
               <div
                 className={cn(
                   "flex w-44 items-center justify-center rounded-full px-4 py-2 hover:cursor-pointer",
-                  currentAction === "Yes"
-                    ? "bg-green-600 text-primary-foreground"
+                  selectedAction === BetAction.YES
+                    ? "bg-green-700 text-primary-foreground"
                     : "border bg-background text-muted-foreground hover:bg-muted-foreground/20",
                 )}
-                onClick={() => setCurrentAction("Yes")}
+                onClick={() => setSelectedAction(BetAction.YES)}
               >
                 <span className="text-sm font-semibold">
                   Yes, ${selectedMarketOption.price}
@@ -71,11 +72,11 @@ const BuySellCard = ({
               <div
                 className={cn(
                   "flex w-44 items-center justify-center rounded-full px-4 py-2 hover:cursor-pointer",
-                  currentAction === "No"
-                    ? "bg-red-600 text-primary-foreground"
+                  selectedAction === BetAction.NO
+                    ? "bg-red-700 text-primary-foreground"
                     : "border bg-background text-muted-foreground hover:bg-muted-foreground/20",
                 )}
-                onClick={() => setCurrentAction("No")}
+                onClick={() => setSelectedAction(BetAction.NO)}
               >
                 <span className="text-sm font-semibold">
                   No, ${selectedMarketOption.price}
