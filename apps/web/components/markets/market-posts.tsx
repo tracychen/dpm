@@ -198,7 +198,9 @@ const MarketPost = ({
       </div>
       <div className="flex items-center justify-between">
         <div className="text-sm text-muted-foreground">
-          {formatDate(post.createdAt)}
+          {typeof post.createdAt === "string"
+            ? formatDate(new Date(post.createdAt))
+            : formatDate(post.createdAt)}
         </div>
         {currentUser &&
           currentUser.id === post.user.id &&

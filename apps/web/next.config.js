@@ -5,7 +5,7 @@ module.exports = {
   experimental: {
     appDir: true,
   },
-  reactStrictMode: true,
+  reactStrictMode: false,
   images: {
     domains: ["tbw-dpm.s3.amazonaws.com", "picsum.photos"],
   },

@@ -4,9 +4,9 @@ enum MarketType {
 }
 
 interface MarketOption {
-    label: string;
-    amountBet: number;
-    price: number;
+  label: string;
+  amountBet: number;
+  price: number;
 }
 
 interface Market {
@@ -20,6 +20,7 @@ interface Market {
   bettedCount: number;
   tag: string;
   imageUrl?: string;
+  bannerUrl?: string;
   options?: MarketOption[];
   type: MarketType;
 }
