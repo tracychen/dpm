@@ -3,10 +3,9 @@
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { Icons } from "../icons";
-import { useState } from "react";
-import Link from "next/link";
+import { useMemo, useState } from "react";
 import { Market } from "@/models/Market.model";
-import { markets, tags } from "@/lib/data";
+import { markets } from "@/lib/data";
 import { SelectedMarket } from "./selected-market";
 
 function MarketCard({
@@ -46,7 +45,7 @@ function MarketCard({
         <div className="flex flex-col gap-y-2">
           <div>
             <span className="text-sm font-semibold text-accent">
-              {market.tag}
+              {market.topic}
             </span>
           </div>
           {/* TODO truncate properly  */}
@@ -92,12 +91,12 @@ function MarketCard({
   );
 }
 
-const Tag = ({
-  tag,
+const Topic = ({
+  topic,
   selected,
   onClick,
 }: {
-  tag: string;
+  topic: string;
   selected: boolean;
   onClick: () => void;
 }) => (
@@ -108,24 +107,32 @@ const Tag = ({
       selected ? "bg-primary text-white" : "bg-secondary text-muted-foreground",
     )}
   >
-    {tag}
+    {topic}
   </button>
 );
 
 export default function FilteredMarkets() {
-  const [currentTag, setCurrentTag] = useState("All");
+  const [currentTopic, setCurrentTopic] = useState("All");
   const [selectedMarketId, setSelectedMarketId] = useState<string | null>();
+
+  const topics = useMemo(
+    () =>
+      Array.from(
+        new Set<string>(["All", ...markets.map((market) => market.topic)]),
+      ),
+    [markets],
+  );
 
   return (
     <div className="flex flex-col">
       {/* TODO overflow scroll */}
       <div className="flex gap-x-4 overflow-hidden py-8">
-        {tags.map((tag) => (
-          <Tag
-            key={tag}
-            tag={tag}
-            selected={tag === currentTag}
-            onClick={() => setCurrentTag(tag)}
+        {topics.map((topic) => (
+          <Topic
+            key={topic}
+            topic={topic}
+            selected={topic === currentTopic}
+            onClick={() => setCurrentTopic(topic)}
           />
         ))}
       </div>
@@ -133,7 +140,8 @@ export default function FilteredMarkets() {
         <div className="flex w-1/3 flex-col gap-4">
           {markets
             .filter(
-              (market) => market.tag === currentTag || currentTag === "All",
+              (market) =>
+                market.topic === currentTopic || currentTopic === "All",
             )
             .map((market) => (
               <MarketCard

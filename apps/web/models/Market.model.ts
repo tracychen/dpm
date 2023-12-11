@@ -18,7 +18,7 @@ interface Market {
   direction: "up" | "down" | "none";
   date: string;
   bettedCount: number;
-  tag: string;
+  topic: string;
   imageUrl?: string;
   bannerUrl?: string;
   options?: MarketOption[];

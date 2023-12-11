@@ -96,6 +96,7 @@ export function CreateMarketDialog({
   async function onSubmit(data: FormData) {
     setIsSaving(true);
 
+    // TODO replace with correct endpoint
     const response = await fetch(`/api/markets`, {
       method: "POST",
       headers: {
@@ -105,7 +106,9 @@ export function CreateMarketDialog({
         type: data.type,
         prompt: data.prompt,
         description: data.description,
-        // TODO add more fields
+        resolution: data.resolution,
+        closingDate: data.closingDate,
+        options: data.options,
       }),
     });
 
@@ -136,7 +139,6 @@ export function CreateMarketDialog({
       <DialogContent className="bg-background sm:max-w-[512px]">
         <DialogHeader>
           <DialogTitle>Create market</DialogTitle>
-          {/* <DialogDescription>Create a new market copy</DialogDescription> */}
         </DialogHeader>
         <form
           className={cn(className, "flex flex-col gap-4")}
@@ -144,10 +146,22 @@ export function CreateMarketDialog({
           {...props}
         >
           <div className="flex flex-col gap-1">
-            {/* <Label>Market Type</Label> */}
             <MarketTypeQuestions form={form} />
           </div>
-          {/* TODO multiple choice market options */}
+          <div className="flex flex-col gap-1">
+            <Label htmlFor="topic">Add topic</Label>
+            <Input
+              id="topic"
+              placeholder="e.g. Science, Politics"
+              className="w-full"
+              {...form.register("topic")}
+            />
+            {form.formState.errors?.topic && (
+              <p className="px-1 text-xs text-red-600">
+                {form.formState.errors.topic.message}
+              </p>
+            )}
+          </div>
           <div className="flex flex-col gap-1">
             <Label htmlFor="name">Description</Label>
             <Textarea
@@ -186,7 +200,6 @@ export function CreateMarketDialog({
             </div>
           </div>
           {/* TODO P2 thumbnail upload */}
-          {/* TODO P2 tags */}
           {/* TODO P2 seed initial liquidity */}
 
           <DialogFooter>

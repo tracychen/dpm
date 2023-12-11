@@ -46,7 +46,7 @@ const ViewMarket = ({
           <div className="space-y-4 pt-6">
             <div className="flex">
               <div className="whitespace-nowrap rounded-full bg-secondary px-4 py-[10px] font-semibold text-muted-foreground">
-                {market.tag}
+                {market.topic}
               </div>
             </div>
             <div className="flex items-center justify-between text-2xl font-semibold">

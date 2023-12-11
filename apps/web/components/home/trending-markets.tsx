@@ -13,7 +13,7 @@ function TrendingMarket({
   date,
   bettedCount,
   imageUrl,
-}: Omit<Market, "tag" | "type">) {
+}: Omit<Market, "topic" | "type">) {
   return (
     <>
       <Link className="flex items-center gap-x-6" href={`/markets/${id}`}>
