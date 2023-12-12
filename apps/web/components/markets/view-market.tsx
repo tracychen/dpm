@@ -156,15 +156,21 @@ const ViewMarket = ({
               </span>
               <NewPostDialog marketId={market.id} />
             </div>
-            <MarketPosts
-              posts={posts}
-              currentUser={currentUser}
-              userShares={market.userShares}
-            />
+            {posts.length !== 0 ? (
+              <MarketPosts
+                posts={posts}
+                currentUser={currentUser}
+                userShares={market.userShares}
+              />
+            ) : (
+              <span className="text-sm text-muted-foreground">
+                No comments yet.
+              </span>
+            )}
           </div>
         </div>
 
-        <div className="flex w-1/3 flex-col">
+        <div className="sticky flex w-1/3 flex-col">
           <BuySellCard
             currentUser={currentUser}
             userShares={market.userShares}

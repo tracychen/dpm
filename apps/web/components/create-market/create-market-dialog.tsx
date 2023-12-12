@@ -96,7 +96,7 @@ export function CreateMarketDialog({
     resolver: zodResolver(createMarketSchema),
     defaultValues: {
       type: "BINARY",
-      options: ["Option 1"],
+      options: [""],
     },
   });
   const [isSaving, setIsSaving] = useState(false);

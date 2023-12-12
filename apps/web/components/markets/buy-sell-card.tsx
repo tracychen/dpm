@@ -128,6 +128,8 @@ const BuySellCard = ({
       description: `Bought ${amount} shares`,
     });
 
+    setAmount(0);
+
     router.refresh();
   }
 
@@ -158,6 +160,8 @@ const BuySellCard = ({
     toast({
       description: `Sold ${amount} shares`,
     });
+
+    setAmount(0);
 
     router.refresh();
   }

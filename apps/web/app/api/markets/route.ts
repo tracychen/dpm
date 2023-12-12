@@ -5,12 +5,28 @@ import { authOptions } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user) {
-      return new Response(null, { status: 403 });
+    // check api key
+    let userId = null;
+    const apiKey = req.headers.get("x-api-key");
+    if (apiKey) {
+      const user = await prisma.user.findFirst({
+        where: {
+          apiKey: apiKey,
+        },
+      });
+      if (!user) {
+        return new Response(null, { status: 403 });
+      }
+      userId = user.id;
+    } else {
+      const session = await getServerSession(authOptions);
+      if (!session?.user) {
+        return new Response(null, { status: 403 });
+      }
+      userId = session.user.id;
     }
 
-    console.log("Creating market for user", session.user.id);
+    console.log("Creating market for user", userId);
 
     const body = await req.json();
     console.log("Creating market", body);
@@ -31,7 +47,7 @@ export async function POST(req: NextRequest) {
         closeAt: body.closeAt,
         user: {
           connect: {
-            id: session.user.id,
+            id: userId,
           },
         },
       },
