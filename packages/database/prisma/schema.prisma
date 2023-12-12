@@ -37,13 +37,13 @@ model Post {
   userId String
 
   // Post
-  body String?
-  marketId String? 
+  body     String?
+  marketId String?
 
   // Reactions
   reactions Reaction[]
-  
-  @@index([marketId], name: "marketId")
+
+  @@index([marketId])
 }
 
 model Reaction {
@@ -66,4 +66,21 @@ model Reaction {
 enum ReactionType {
   LIKE
   DISLIKE
+}
+
+model MarketOptionHistory {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Market
+  marketId String
+
+  // Option
+  optionId String
+
+  // Value
+  value Float
+
+  @@index([marketId, optionId])
 }
