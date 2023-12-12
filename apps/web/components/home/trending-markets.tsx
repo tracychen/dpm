@@ -1,17 +1,23 @@
-import { cn } from "@/lib/utils";
+import { calculatePercentChance, cn, formatDate } from "@/lib/utils";
 import { Icons } from "../icons";
-import { markets } from "@/lib/data";
 import Link from "next/link";
-import { Market } from "@/models/Market.model";
+import { Market, UserShare } from "@dpm/database";
 
 function TrendingMarket({
   id,
-  prompt,
+  title,
   percentChance,
-  date,
-  bettedCount,
+  closeAt,
   imageUrl,
-}: Omit<Market, "topic" | "type">) {
+  userCount,
+}: {
+  id: string;
+  title: string;
+  percentChance: number;
+  closeAt: Date;
+  imageUrl: string;
+  userCount: number;
+}) {
   return (
     <>
       <Link className="flex items-center gap-x-6" href={`/markets/${id}`}>
@@ -22,7 +28,7 @@ function TrendingMarket({
         <div className="flex flex-col gap-y-1">
           {/* TODO truncate properly  */}
           <div className="flex items-center justify-between text-xl font-semibold">
-            <span>{prompt}</span>
+            <span>{title}</span>
           </div>
           <div
             className={cn(
@@ -40,11 +46,11 @@ function TrendingMarket({
               <div className="flex gap-x-4">
                 <div className="flex items-center text-sm text-muted-foreground">
                   <Icons.timer className="mr-1 h-4 w-4" />
-                  <span>{date}</span>
+                  <span>{formatDate(new Date(closeAt), false)}</span>
                 </div>
                 <div className="flex items-center text-sm text-muted-foreground">
                   <Icons.user className="mr-1 h-4 w-4" />
-                  <span>{bettedCount.toLocaleString("en-US")} betted</span>
+                  <span>{userCount.toLocaleString("en-US")} betted</span>
                 </div>
               </div>
             </div>
@@ -55,7 +61,13 @@ function TrendingMarket({
   );
 }
 
-export default function TrendingMarkets({ markets }: { markets: Market[] }) {
+export default function TrendingMarkets({
+  markets,
+}: {
+  markets: (Market & {
+    userShares: UserShare[];
+  })[];
+}) {
   return (
     <div className="flex flex-col">
       <div className="pb-2 text-2xl font-semibold tracking-tight text-accent sm:pb-8">
@@ -63,10 +75,15 @@ export default function TrendingMarkets({ markets }: { markets: Market[] }) {
       </div>
       <div className="flex flex-col gap-y-8">
         {markets
-          .sort((a, b) => b.bettedCount - a.bettedCount)
+          .sort((a, b) => b.userShares.length - a.userShares.length)
           .slice(0, 3)
           .map((market, index) => (
-            <TrendingMarket key={index} {...market} />
+            <TrendingMarket
+              key={index}
+              {...market}
+              userCount={market.userShares.length}
+              percentChance={calculatePercentChance(market.userShares)}
+            />
           ))}
       </div>
     </div>

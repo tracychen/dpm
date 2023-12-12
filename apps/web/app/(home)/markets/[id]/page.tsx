@@ -1,23 +1,21 @@
 "use server";
 
 import { ViewMarket } from "@/components/markets/view-market";
-import { markets } from "@/lib/data";
 import { getCurrentUser } from "@/lib/session";
 import { prisma } from "@dpm/database";
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
-  const id = params.id;
-  const market = markets.find((market) => market.id === id);
+  const market = await getMarket(params.id);
   return {
     title: `${market.id} | PEEK`,
   };
 }
 
 async function getMarket(id: string) {
-  // TODO replace with correct endpoint
-  // const res = await fetch(`http://localhost:3000/api/markets/${id}`);
-  // const market = await res.json();
-  const market = markets.find((market) => market.id === id);
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/markets/${id}`,
+  );
+  const market = await res.json();
   return market;
 }
 

@@ -2,11 +2,11 @@ import { useState } from "react";
 import { Icons } from "../icons";
 import { Button } from "../ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { MarketOption } from "@/models/Market.model";
 import { BetAction } from "@/models/Bet.model";
 import { cn } from "@/lib/utils";
 import { OrderAction } from "@/models/Order.model";
 import { OptionGraph } from "./option-graph";
+import { Option } from "@dpm/database";
 
 const MarketOptionItem = ({
   marketId,
@@ -18,10 +18,10 @@ const MarketOptionItem = ({
   selectedOrderAction,
 }: {
   marketId: string;
-  marketOption: MarketOption;
+  marketOption: Option;
   isSelected: boolean;
   selectedBetAction: BetAction;
-  setSelectedMarketOption: (marketOption: MarketOption) => void;
+  setSelectedMarketOption: (marketOption: Option) => void;
   setSelectedBetAction: (betAction: BetAction) => void;
   selectedOrderAction: OrderAction;
 }) => {
@@ -34,10 +34,10 @@ const MarketOptionItem = ({
         onClick={() => [setShowAdditionalData(!showAdditionalData)]}
       >
         <div className="flex flex-col gap-y-1">
-          <div className="text-xl font-semibold">{marketOption.label}</div>
+          <div className="text-xl font-semibold">{marketOption.title}</div>
           <div className="flex items-center text-muted-foreground">
             <Icons.coin className="mr-1 h-6 w-6" />
-            <span>${marketOption.amountBet.toLocaleString("en-US")} bet</span>
+            <span>${(20000).toLocaleString("en-US")} bet</span>
           </div>
         </div>
         <div className="flex items-center gap-x-4">
@@ -56,9 +56,7 @@ const MarketOptionItem = ({
               e.stopPropagation();
             }}
           >
-            <span>
-              {selectedOrderAction} Yes, ${marketOption.price}
-            </span>
+            <span>{selectedOrderAction} Yes, $1</span>
           </Button>
           <Button
             variant="negative"
@@ -75,9 +73,7 @@ const MarketOptionItem = ({
               e.stopPropagation();
             }}
           >
-            <span>
-              {selectedOrderAction} No, ${marketOption.price}
-            </span>
+            <span>{selectedOrderAction} No, $1</span>
           </Button>
         </div>
       </div>
@@ -89,11 +85,11 @@ const MarketOptionItem = ({
               <TabsTrigger value="resolution">Resolution</TabsTrigger>
             </TabsList>
             <TabsContent value="graph">
-              <OptionGraph marketId={marketId} optionId={marketOption.label} />
+              <OptionGraph marketId={marketId} optionId={marketOption.title} />
             </TabsContent>
             <TabsContent value="resolution">
               {/* TODO figure out what goes here per option */}
-              <div className="py-6">{marketOption.label}</div>
+              <div className="py-6">{marketOption.title}</div>
             </TabsContent>
           </Tabs>
         </div>

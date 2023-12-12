@@ -33,40 +33,45 @@ interface CreateMarketDialogProps
 
 const MarketTypeQuestions = ({ form }: { form: UseFormReturn<FormData> }) => {
   return (
-    <Tabs defaultValue="binary">
+    <Tabs
+      defaultValue="BINARY"
+      onValueChange={(value) => {
+        form.setValue("type", value);
+      }}
+    >
       <TabsList className="grid grid-cols-2">
-        <TabsTrigger value="binary">Binary</TabsTrigger>
-        <TabsTrigger value="multipleChoice">Multiple choice</TabsTrigger>
+        <TabsTrigger value="BINARY">Binary</TabsTrigger>
+        <TabsTrigger value="MULTIPLE_CHOICE">Multiple choice</TabsTrigger>
       </TabsList>
-      <TabsContent value="binary">
+      <TabsContent value="BINARY">
         <Separator className="my-4" />
         <div className="flex flex-col gap-1">
-          <Label htmlFor="prompt">Question</Label>
+          <Label htmlFor="title">Question</Label>
           <Input
-            id="prompt"
+            id="title"
             placeholder="Question"
             className="w-full"
-            {...form.register("prompt")}
+            {...form.register("title")}
           />
-          {form.formState.errors?.prompt && (
+          {form.formState.errors?.title && (
             <p className="px-1 text-xs text-red-600">
-              {form.formState.errors.prompt.message}
+              {form.formState.errors.title.message}
             </p>
           )}
         </div>
       </TabsContent>
-      <TabsContent value="multipleChoice" className="space-y-4">
+      <TabsContent value="MULTIPLE_CHOICE" className="space-y-4">
         <div className="flex flex-col gap-1">
-          <Label htmlFor="prompt">Question</Label>
+          <Label htmlFor="title">Question</Label>
           <Input
-            id="prompt"
+            id="title"
             placeholder="Question"
             className="w-full"
-            {...form.register("prompt")}
+            {...form.register("title")}
           />
-          {form.formState.errors?.prompt && (
+          {form.formState.errors?.title && (
             <p className="px-1 text-xs text-red-600">
-              {form.formState.errors.prompt.message}
+              {form.formState.errors.title.message}
             </p>
           )}
         </div>
@@ -85,10 +90,13 @@ export function CreateMarketDialog({
   ...props
 }: CreateMarketDialogProps) {
   const router = useRouter();
+  const [open, setOpen] = useState(false);
+
   const form = useForm<FormData>({
     resolver: zodResolver(createMarketSchema),
     defaultValues: {
-      // TODO add default values
+      type: "BINARY",
+      options: ["Option 1"],
     },
   });
   const [isSaving, setIsSaving] = useState(false);
@@ -96,18 +104,21 @@ export function CreateMarketDialog({
   async function onSubmit(data: FormData) {
     setIsSaving(true);
 
+    console.log(data);
+
     // TODO replace with correct endpoint
-    const response = await fetch(`/api/markets`, {
+    const response = await fetch("/api/markets", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        type: data.type,
-        prompt: data.prompt,
+        title: data.title,
         description: data.description,
         resolution: data.resolution,
-        closingDate: data.closingDate,
+        topic: data.topic,
+        marketType: data.type,
+        closeAt: data.closingDate,
         options: data.options,
       }),
     });
@@ -125,12 +136,20 @@ export function CreateMarketDialog({
     toast({
       description: "Created market.",
     });
-
+    setOpen(false);
     router.refresh();
   }
 
   return (
-    <Dialog>
+    <Dialog
+      open={open}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) {
+          form.reset();
+        }
+        setOpen(isOpen);
+      }}
+    >
       <DialogTrigger asChild>
         <Button className="rounded-full" variant="default">
           Create Market

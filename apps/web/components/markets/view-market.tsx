@@ -1,16 +1,15 @@
 "use client";
 
-import { Market, MarketType } from "@/models/Market.model";
 import { Icons } from "../icons";
-import { cn } from "@/lib/utils";
+import { calculatePercentChance, cn, formatDate } from "@/lib/utils";
 import { Separator } from "../ui/separator";
 import { MarketOptionItem } from "./market-option";
 import { BuySellCard } from "./buy-sell-card";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { BetAction } from "@/models/Bet.model";
 import { OrderAction } from "@/models/Order.model";
-import { Post, Reaction, User } from "@dpm/database";
+import { Market, Option, Post, Reaction, User, UserShare } from "@dpm/database";
 import { MarketPosts } from "./market-posts";
 import { NewPostDialog } from "./new-post-dialog";
 import { User as NextAuthUser } from "next-auth";
@@ -21,7 +20,10 @@ const ViewMarket = ({
   posts,
   currentUser,
 }: {
-  market: Market;
+  market: Market & {
+    userShares: UserShare[];
+    options: Option[];
+  };
   posts: (Post & {
     reactions: Reaction[];
     user: User;
@@ -35,6 +37,10 @@ const ViewMarket = ({
   const [selectedOrderAction, setSelectedOrderAction] = useState(
     OrderAction.BUY,
   );
+
+  const percentChance = useMemo(() => {
+    return calculatePercentChance(market.userShares);
+  }, [market.userShares]);
 
   return (
     <>
@@ -51,16 +57,16 @@ const ViewMarket = ({
               </div>
             </div>
             <div className="flex items-center justify-between text-2xl font-semibold">
-              <span>{market.prompt}</span>
+              <span>{market.title}</span>
               <div
                 className={cn(
                   "flex items-center",
-                  market.percentChance > 50 && "text-green-700",
-                  market.percentChance < 50 && "text-red-700",
-                  market.percentChance === 50 && "text-muted-foreground",
+                  percentChance > 50 && "text-green-700",
+                  percentChance < 50 && "text-red-700",
+                  percentChance === 50 && "text-muted-foreground",
                 )}
               >
-                <span>{market.percentChance}%</span>
+                <span>{percentChance}%</span>
                 <span className="ml-1 text-lg font-normal">chance</span>
               </div>
             </div>
@@ -69,23 +75,25 @@ const ViewMarket = ({
                 <div className="flex gap-x-4">
                   <div className="flex items-center text-muted-foreground">
                     <Icons.timer className="mr-1 h-6 w-6" />
-                    <span className="text-lg">{market.date}</span>
+                    <span className="text-lg">
+                      {formatDate(new Date(market.closeAt), false)}
+                    </span>
                   </div>
                   <div className="flex items-center text-muted-foreground">
                     <Icons.user className="mr-1 h-6 w-6" />
                     <span className="text-lg">
-                      {market.bettedCount.toLocaleString("en-US")} betted
+                      {market.userShares.length.toLocaleString("en-US")} betted
                     </span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          {market.type == MarketType.BINARY ? (
+          {market.marketType == "BINARY" ? (
             <>
               <OptionGraph
                 marketId={market.id}
-                optionId={market.options[0].label}
+                optionId={market.options[0].title}
               />
             </>
           ) : (
@@ -97,8 +105,7 @@ const ViewMarket = ({
                   marketOption={option}
                   setSelectedMarketOption={setSelectedMarketOption}
                   setSelectedBetAction={setSelectedBetAction}
-                  // TODO should use id instead of label
-                  isSelected={selectedMarketOption.label === option.label}
+                  isSelected={selectedMarketOption.id === option.id}
                   selectedBetAction={selectedBetAction}
                   selectedOrderAction={selectedOrderAction}
                 />
@@ -169,7 +176,7 @@ const ViewMarket = ({
           <BuySellCard
             selectedAction={selectedBetAction}
             selectedMarketOption={selectedMarketOption}
-            marketType={market.type}
+            marketType={market.marketType}
             setSelectedAction={setSelectedBetAction}
             setSelectedOrderAction={setSelectedOrderAction}
             selectedOrderAction={selectedOrderAction}

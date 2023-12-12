@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const createMarketSchema = z.object({
   type: z.string().optional().nullable(),
-  prompt: z.string(),
+  title: z.string(),
   description: z.string(),
   topic: z.string(),
   resolution: z.string(),

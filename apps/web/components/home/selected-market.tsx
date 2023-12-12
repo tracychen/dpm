@@ -1,4 +1,3 @@
-import { Market } from "@/models/Market.model";
 import { Icons } from "../icons";
 import { Button } from "../ui/button";
 import { MarketPosts } from "../markets/market-posts";
@@ -7,12 +6,16 @@ import { useEffect, useState } from "react";
 import { toast } from "../ui/use-toast";
 import { Skeleton } from "../ui/skeleton";
 import { User } from "next-auth";
+import { Market, UserShare } from "@dpm/database";
+import { formatDate } from "@/lib/utils";
 
 const SelectedMarket = ({
   market,
   currentUser,
 }: {
-  market: Market;
+  market: Market & {
+    userShares: UserShare[];
+  };
   currentUser: User;
 }) => {
   const [posts, setPosts] = useState([]);
@@ -44,16 +47,16 @@ const SelectedMarket = ({
   return (
     <div className="flex flex-col gap-y-4">
       <div className="flex text-2xl font-semibold">
-        <span>{market.prompt}</span>
+        <span>{market.title}</span>
       </div>
       <div className="flex gap-x-4">
         <div className="flex items-center text-sm text-muted-foreground">
           <Icons.timer className="mr-1 h-4 w-4" />
-          <span>{market.date}</span>
+          <span>{formatDate(new Date(market.closeAt), false)}</span>
         </div>
         <div className="flex items-center text-sm text-muted-foreground">
           <Icons.user className="mr-1 h-4 w-4" />
-          <span>{market.bettedCount.toLocaleString("en-US")} betted</span>
+          <span>{market.userShares.length.toLocaleString("en-US")} betted</span>
         </div>
       </div>
       <Button variant="default" size="full" className="w-44">

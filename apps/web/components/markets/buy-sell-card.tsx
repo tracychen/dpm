@@ -11,8 +11,8 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { MarketOption, MarketType } from "@/models/Market.model";
 import { OrderAction } from "@/models/Order.model";
+import { Option } from "@dpm/database";
 
 const Outcome = ({
   selectedAction,
@@ -20,7 +20,7 @@ const Outcome = ({
   setSelectedAction,
 }: {
   selectedAction: BetAction;
-  selectedMarketOption: MarketOption;
+  selectedMarketOption: Option;
   setSelectedAction: (action: BetAction) => void;
 }) => {
   return (
@@ -48,9 +48,7 @@ const Outcome = ({
           )}
           onClick={() => setSelectedAction(BetAction.YES)}
         >
-          <span className="text-sm font-semibold">
-            Yes, ${selectedMarketOption.price}
-          </span>
+          <span className="text-sm font-semibold">Yes, $1</span>
         </div>
         <div
           className={cn(
@@ -61,9 +59,7 @@ const Outcome = ({
           )}
           onClick={() => setSelectedAction(BetAction.NO)}
         >
-          <span className="text-sm font-semibold">
-            No, ${selectedMarketOption.price}
-          </span>
+          <span className="text-sm font-semibold">No, $1</span>
         </div>
       </div>
     </>
@@ -78,9 +74,9 @@ const BuySellCard = ({
   setSelectedOrderAction,
   selectedOrderAction,
 }: {
-  selectedMarketOption: MarketOption;
+  selectedMarketOption: Option;
   selectedAction: BetAction;
-  marketType: MarketType;
+  marketType: "BINARY" | "MULTIPLE_CHOICE";
   setSelectedAction: (action: BetAction) => void;
   setSelectedOrderAction: (action: OrderAction) => void;
   selectedOrderAction: OrderAction;
@@ -90,9 +86,9 @@ const BuySellCard = ({
   return (
     <>
       <div className="flex flex-col rounded-2xl border p-8 shadow-[0_4px_20px_0px_rgb(0,0,0,0.05)]">
-        {marketType === MarketType.MULTIPLE_CHOICE && (
+        {marketType === "MULTIPLE_CHOICE" && (
           <span className="pb-4 text-2xl font-semibold">
-            {selectedMarketOption.label}
+            {selectedMarketOption.title}
           </span>
         )}
         <Tabs defaultValue={OrderAction.BUY} className="w-full">
@@ -147,16 +143,16 @@ const BuySellCard = ({
             <div className="space-y-2 font-semibold">
               <div className="flex justify-between text-muted-foreground">
                 <span>Average price</span>
-                <span>${selectedMarketOption.price}</span>
+                <span>$1</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Shares</span>
-                <span>TBD CALCUALTE</span>
+                <span>{amount}</span>
               </div>
-              <div className="flex justify-between">
+              {/* <div className="flex justify-between">
                 <span className="text-muted-foreground">Potential return</span>
-                <span className="text-green-700">TBD CALCULATE?</span>
-              </div>
+                <span className="text-green-700">{amount}</span>
+              </div> */}
             </div>
           </TabsContent>
           <TabsContent value={OrderAction.SELL}>
@@ -192,13 +188,13 @@ const BuySellCard = ({
             <div className="space-y-2 font-semibold">
               <div className="flex justify-between text-muted-foreground">
                 <span>Average price</span>
-                <span>${selectedMarketOption.price}</span>
+                <span>$1</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">
                   Est. amount received
                 </span>
-                <span>TBD CALCUALTE</span>
+                <span>${amount}</span>
               </div>
             </div>
           </TabsContent>

@@ -1,3 +1,4 @@
+import { UserShare } from "@dpm/database";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -24,7 +25,16 @@ export function truncateStringMiddle(input: string, length = 16) {
   return `${firstHalf}...${secondHalf}`;
 }
 
-export function formatDate(date: Date) {
+export function formatDate(date: Date, includeTime = true) {
+  if (!includeTime) {
+    const formattedDate = new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    }).format(date);
+    return formattedDate;
+  }
+
   const formattedDate = new Intl.DateTimeFormat("en-US", {
     hour: "numeric",
     minute: "numeric",
@@ -34,4 +44,30 @@ export function formatDate(date: Date) {
     year: "numeric",
   }).format(date);
   return formattedDate;
+}
+
+export function calculatePercentChance(userShares: UserShare[]) {
+  const yesShares = userShares.filter(
+    (userShares) => userShares.outcome === "YES",
+  );
+  const noShares = userShares.filter(
+    (userShares) => userShares.outcome === "NO",
+  );
+
+  const yesSharesCount = yesShares.reduce(
+    (acc, userShares) => acc + userShares.shares,
+    0,
+  );
+  const noSharesCount = noShares.reduce(
+    (acc, userShares) => acc + userShares.shares,
+    0,
+  );
+
+  const totalSharesCount = yesSharesCount + noSharesCount;
+
+  if (totalSharesCount === 0) {
+    return 50;
+  }
+
+  return Math.round((yesSharesCount / totalSharesCount) * 100);
 }

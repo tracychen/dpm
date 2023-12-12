@@ -1,21 +1,27 @@
 "use client";
 
 import Image from "next/image";
-import { cn } from "@/lib/utils";
+import { calculatePercentChance, cn } from "@/lib/utils";
 import { useMemo, useState } from "react";
-import { Market } from "@/models/Market.model";
 import { SelectedMarket } from "./selected-market";
-import { useSession } from "next-auth/react";
+import { Market, UserShare } from "@dpm/database";
+import { User } from "next-auth";
 
 function MarketCard({
   market,
   isSelectedMarket,
   setSelectedMarketId,
 }: {
-  market: Market;
+  market: Market & {
+    userShares: UserShare[];
+  };
   isSelectedMarket: boolean;
   setSelectedMarketId: (id: string | null) => void;
 }) {
+  const percentChance = useMemo(() => {
+    return calculatePercentChance(market.userShares);
+  }, [market.userShares]);
+
   return (
     <div
       className={cn(
@@ -35,7 +41,7 @@ function MarketCard({
         <div className="aspect-square h-[120px] w-[120px] flex-shrink-0 overflow-hidden rounded-2xl">
           <Image
             src={market.imageUrl || "https://picsum.photos/seed/picsum/200"}
-            alt={market.prompt}
+            alt={market.title}
             width={200}
             height={200}
             className="h-full w-full object-cover"
@@ -50,19 +56,17 @@ function MarketCard({
           {/* TODO truncate properly  */}
           <div className="space-y-1">
             <div className="line-clamp-1 flex items-center justify-between text-xl font-semibold">
-              <span>{market.prompt}</span>
+              <span>{market.title}</span>
             </div>
             <div
               className={cn(
                 "flex items-center",
-                market.percentChance > 50 && "text-green-700",
-                market.percentChance < 50 && "text-red-700",
-                market.percentChance === 50 && "text-muted-foreground",
+                percentChance > 50 && "text-green-700",
+                percentChance < 50 && "text-red-700",
+                percentChance === 50 && "text-muted-foreground",
               )}
             >
-              <span className="text-xl font-semibold">
-                {market.percentChance}%
-              </span>
+              <span className="text-xl font-semibold">{percentChance}%</span>
               <span className="ml-1 font-normal">chance</span>
             </div>
           </div>
@@ -92,12 +96,19 @@ const Topic = ({
   </button>
 );
 
-export default function FilteredMarkets({ markets }: { markets: Market[] }) {
+export default function FilteredMarkets({
+  markets,
+  currentUser,
+}: {
+  markets: (Market & {
+    userShares: UserShare[];
+  })[];
+  currentUser: User;
+}) {
   const [currentTopic, setCurrentTopic] = useState("All");
   const [selectedMarketId, setSelectedMarketId] = useState<string | null>(
     markets[0].id,
   );
-  const { data: session } = useSession();
 
   const topics = useMemo(
     () =>
@@ -140,7 +151,7 @@ export default function FilteredMarkets({ markets }: { markets: Market[] }) {
           {selectedMarketId && (
             <SelectedMarket
               market={markets.find((market) => market.id === selectedMarketId)}
-              currentUser={session?.user}
+              currentUser={currentUser}
             />
           )}
         </div>
