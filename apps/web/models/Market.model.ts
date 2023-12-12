@@ -14,7 +14,6 @@ interface Market {
   prompt: string;
   percentChance: number;
   description?: string;
-  change: string;
   direction: "up" | "down" | "none";
   date: string;
   bettedCount: number;

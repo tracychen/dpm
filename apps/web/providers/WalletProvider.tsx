@@ -23,12 +23,12 @@ import { SessionProvider } from "next-auth/react";
 import { Session } from "next-auth";
 
 const getSiweMessageOptions: GetSiweMessageOptions = () => ({
-  statement: "Sign in to DPM",
+  statement: "Sign in to PEEK",
 });
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [avalanche, avalancheFuji],
-  [publicProvider()]
+  [publicProvider()],
 );
 
 const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_ID;

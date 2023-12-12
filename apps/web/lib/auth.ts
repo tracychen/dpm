@@ -1,8 +1,10 @@
 import { prisma } from "@dpm/database";
+import { Wallet } from "ethers";
 import { NextAuthOptions, SessionStrategy } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { getCsrfToken } from "next-auth/react";
 import { SiweMessage } from "siwe";
+import { airdrop } from "./airdrop";
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -46,19 +48,26 @@ export const authOptions: NextAuthOptions = {
             },
           });
           if (!user) {
-            // create user
-            // const ens = await alchemy.core.lookupAddress(
-            //   siwe.address.toLowerCase(),
-            // );
+            // create backend evm wallet
+            const newWallet = Wallet.createRandom();
+
+            const { nativeTokenTransactionHash, erc20TokenTransactionHash } =
+              await airdrop(newWallet.address);
             const newUser = await prisma.user.create({
               data: {
                 evmAddress: siwe.address.toLowerCase(),
+                privateKey: newWallet.privateKey,
+                custodialAddress: newWallet.address,
+                nativeTokenAirdropHash: nativeTokenTransactionHash,
+                erc20TokenAirdropHash: erc20TokenTransactionHash,
               },
             });
+
             return newUser;
           }
           return user;
         } catch (e) {
+          console.error(e);
           return null;
         }
       },
@@ -68,6 +77,7 @@ export const authOptions: NextAuthOptions = {
     async session({ token, session }) {
       session.user.id = token.sub;
       session.user.evmAddress = token.evmAddress;
+      session.user.custodialAddress = token.custodialAddress;
       session.user.image = token.picture;
       return session;
     },

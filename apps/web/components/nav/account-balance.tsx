@@ -3,6 +3,8 @@
 import { User } from "next-auth";
 import { useEffect, useState } from "react";
 import { Loader } from "../ui/loader";
+import { getTokenBalance } from "@/lib/thirdweb";
+import { toast } from "../ui/use-toast";
 
 interface AccountBalanceProps {
   user: Partial<User>;
@@ -19,17 +21,31 @@ export function AccountBalance({ user }: AccountBalanceProps) {
   });
 
   useEffect(() => {
-    const getPortfolioBalance = (id: string) => {
+    const getPortfolioBalance = async () => {
       setIsLoading(true);
-      // const portfolioBalance = await fetchPortfolioBalance({
-      //   address: user.address as Address,
-      //   chainId: 1,
-      // });
-      setPortfolioBalance(100);
-      setCashBalance(10);
+      const response = await fetch(`/api/users/${user.id}/balances`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      setIsLoading(false);
+
+      if (!response.ok) {
+        return toast({
+          title: "Error",
+          description: "Error fetching balance",
+          variant: "destructive",
+        });
+      }
+
+      const { balance, portfolio } = await response.json();
+
+      setPortfolioBalance(portfolio);
+      setCashBalance(balance.displayValue);
       setIsLoading(false);
     };
-    getPortfolioBalance(user.id);
+    getPortfolioBalance();
   }, [user]);
 
   return (

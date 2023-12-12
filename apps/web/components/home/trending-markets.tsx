@@ -8,8 +8,6 @@ function TrendingMarket({
   id,
   prompt,
   percentChance,
-  change,
-  direction,
   date,
   bettedCount,
   imageUrl,
