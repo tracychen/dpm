@@ -114,7 +114,6 @@ const MarketOptionItem = ({
               <OptionGraph marketId={marketId} optionId={marketOption.title} />
             </TabsContent>
             <TabsContent value="holder">
-              {/* TODO figure out what goes here per option */}
               <div className="grid grid-cols-2 space-x-10">
                 <div className="flex flex-col">
                   <div className="flex justify-between pt-4 text-xl font-semibold">
@@ -133,7 +132,6 @@ const MarketOptionItem = ({
                       <span>{userShare.shares}</span>
                     </div>
                   ))}
-                  {/* TODO */}
                 </div>
                 <div className="flex flex-col">
                   <div className="flex justify-between pt-4 text-xl font-semibold">

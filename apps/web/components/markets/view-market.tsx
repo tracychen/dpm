@@ -1,7 +1,12 @@
 "use client";
 
 import { Icons } from "../icons";
-import { calculatePercentChance, cn, formatDate } from "@/lib/utils";
+import {
+  calculatePercentChance,
+  cn,
+  formatDate,
+  truncateStringMiddle,
+} from "@/lib/utils";
 import { Separator } from "../ui/separator";
 import { MarketOptionItem } from "./market-option";
 import { BuySellCard } from "./buy-sell-card";
@@ -15,6 +20,7 @@ import { NewPostDialog } from "./new-post-dialog";
 import { User as NextAuthUser } from "next-auth";
 import { OptionGraph } from "./option-graph";
 import { MarketWithOptionsAndShares } from "@/models/Market.model";
+import { BinaryOption } from "./binary-option";
 
 const ViewMarket = ({
   market,
@@ -88,12 +94,7 @@ const ViewMarket = ({
             </div>
           </div>
           {market.marketType == "BINARY" ? (
-            <>
-              <OptionGraph
-                marketId={market.id}
-                optionId={market.options[0].title}
-              />
-            </>
+            <BinaryOption market={market} />
           ) : (
             market.options.map((option, index) => (
               <div key={index}>
@@ -140,9 +141,9 @@ const ViewMarket = ({
                     <span className="text-sm text-muted-foreground">
                       Resolver
                     </span>
-                    <Link className="text-sm text-accent" href="/">
-                      0x..TODO
-                    </Link>
+                    <span className="text-sm text-accent">
+                      {truncateStringMiddle(market.user.evmAddress, 8)}
+                    </span>
                   </div>
                 </div>
               </div>
