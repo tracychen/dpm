@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { prisma } from "@dpm/database";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { sdk } from "@/lib/thirdweb";
 
 export async function POST(
   req: NextRequest,
@@ -49,8 +50,20 @@ export async function POST(
       },
     });
 
-    // TODO take tokens from funding address and send to user custodial wallet
-
+    // Send tokens from funding address to user custodial wallet
+    const erc20Contract = await sdk.getContract(
+      process.env.ERC20_CONTRACT_ADDRESS!,
+    );
+    console.log(
+      "Sending tokens from funding address to user custodial wallet",
+      process.env.FUNDING_ADDRESS!,
+      session.user.custodialAddress,
+      Number(body.shares),
+    );
+    await erc20Contract.erc20.transfer(
+      session.user.custodialAddress,
+      Number(body.shares),
+    );
     return new Response(JSON.stringify(userShare));
   } catch (error) {
     console.error(error);

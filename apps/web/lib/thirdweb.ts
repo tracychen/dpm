@@ -16,3 +16,19 @@ export const getTokenBalance = async (address: string) => {
   const balance = await erc20Contract.erc20.balanceOf(address);
   return balance;
 };
+
+export const sendTokens = async (
+  privateKey: string,
+  toAddress: string,
+  amount: number,
+) => {
+  const userSdk = ThirdwebSDK.fromPrivateKey(privateKey, "avalanche-fuji", {
+    clientId: process.env.THIRDWEB_CLIENT_ID!,
+    secretKey: process.env.THIRDWEB_SECRET_KEY!,
+  });
+  const erc20Contract = await userSdk.getContract(
+    process.env.ERC20_CONTRACT_ADDRESS!,
+  );
+  const tx = await erc20Contract.erc20.transfer(toAddress, amount);
+  return tx;
+};

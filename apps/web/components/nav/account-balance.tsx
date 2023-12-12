@@ -3,7 +3,6 @@
 import { User } from "next-auth";
 import { useEffect, useState } from "react";
 import { Loader } from "../ui/loader";
-import { getTokenBalance } from "@/lib/thirdweb";
 import { toast } from "../ui/use-toast";
 
 interface AccountBalanceProps {
@@ -46,7 +45,7 @@ export function AccountBalance({ user }: AccountBalanceProps) {
       setIsLoading(false);
     };
     getPortfolioBalance();
-  }, [user]);
+  }, []);
 
   return (
     <>

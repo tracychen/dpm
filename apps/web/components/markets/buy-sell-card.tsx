@@ -151,7 +151,7 @@ const BuySellCard = ({
   return (
     <>
       <div className="flex flex-col rounded-2xl border p-8 shadow-[0_4px_20px_0px_rgb(0,0,0,0.05)]">
-        {marketType === "MULTIPLE_CHOICE" && (
+        {marketType === "MULTIPLE_CHOICE" && selectedMarketOption.title && (
           <span className="pb-4 text-2xl font-semibold">
             {selectedMarketOption.title}
           </span>
@@ -199,6 +199,7 @@ const BuySellCard = ({
                 className="w-full"
                 size="full"
                 onClick={buyShares}
+                disabled={amount < 1}
               >
                 {isLoading ? (
                   <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
@@ -247,6 +248,7 @@ const BuySellCard = ({
                 className="w-full"
                 size="full"
                 onClick={sellShares}
+                disabled={amount < 1}
               >
                 {isLoading ? (
                   <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />

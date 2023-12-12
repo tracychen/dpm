@@ -85,6 +85,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.evmAddress = user.evmAddress;
         token.picture = user.imageUrl;
+        token.custodialAddress = user.custodialAddress;
       }
       return token;
     },
