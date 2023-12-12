@@ -1,6 +1,7 @@
 import { Icons } from "../icons";
 import { calculatePercentChance, cn, formatDate } from "@/lib/utils";
 import { MarketWithOptionsAndShares } from "@/models/Market.model";
+import Link from "next/link";
 import { useMemo } from "react";
 
 export default function HomeBanner({
@@ -13,7 +14,10 @@ export default function HomeBanner({
   }, [market.userShares]);
 
   return (
-    <div className="flex flex-col">
+    <Link
+      className="flex flex-col hover:cursor-pointer"
+      href={`/markets/${market.id}`}
+    >
       <div className="pb-2 text-2xl font-semibold tracking-tight text-accent sm:pb-8">
         {market.topic}
       </div>
@@ -54,6 +58,6 @@ export default function HomeBanner({
         </div>
         <div className="text-lg text-muted-foreground">{optionTitle}</div>
       </div>
-    </div>
+    </Link>
   );
 }
