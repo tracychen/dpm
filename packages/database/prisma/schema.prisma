@@ -21,6 +21,7 @@ model User {
   erc20TokenAirdropHash  String?
 
   imageUrl String?
+  apiKey   String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
