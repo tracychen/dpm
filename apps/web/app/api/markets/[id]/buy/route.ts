@@ -11,7 +11,12 @@ export async function POST(
   try {
     const userId = await authenticate(req);
     if (!userId) {
-      return new Response(null, { status: 403 });
+      return new Response(
+        JSON.stringify({
+          error: "Authentication failed",
+        }),
+        { status: 403 },
+      );
     }
 
     const body = await req.json();

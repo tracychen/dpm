@@ -6,7 +6,12 @@ export async function POST(req: NextRequest) {
   try {
     const userId = await authenticate(req);
     if (!userId) {
-      return new Response(null, { status: 403 });
+      return new Response(
+        JSON.stringify({
+          error: "Authentication failed",
+        }),
+        { status: 403 },
+      );
     }
 
     console.log("Creating market for user", userId);

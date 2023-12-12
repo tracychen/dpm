@@ -1,7 +1,5 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@dpm/database";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 import { sdk } from "@/lib/thirdweb";
 import { authenticate } from "@/lib/middleware";
 
@@ -12,7 +10,12 @@ export async function POST(
   try {
     const userId = await authenticate(req);
     if (!userId) {
-      return new Response(null, { status: 403 });
+      return new Response(
+        JSON.stringify({
+          error: "Authentication failed",
+        }),
+        { status: 403 },
+      );
     }
 
     console.log("Selling option for market and user", params.id, userId);
@@ -48,12 +51,22 @@ export async function POST(
       },
     });
     if (!userShare) {
-      return new Response(null, { status: 400 });
+      return new Response(
+        JSON.stringify({
+          error: "User does not have shares for this market",
+        }),
+        { status: 400 },
+      );
     }
 
     // Check if user has enough shares to sell
     if (userShare.shares < Number(body.shares)) {
-      return new Response(null, { status: 400 });
+      return new Response(
+        JSON.stringify({
+          error: "User does not have enough shares to sell",
+        }),
+        { status: 400 },
+      );
     }
 
     // update shares
