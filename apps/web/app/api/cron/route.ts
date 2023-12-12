@@ -48,5 +48,9 @@ export async function GET() {
     }
   }
 
-  return Response.json({ success: true });
+  return new Response(
+    JSON.stringify({
+      success: true,
+    }),
+  );
 }
