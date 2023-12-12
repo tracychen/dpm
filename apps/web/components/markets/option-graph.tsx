@@ -15,17 +15,14 @@ const OptionGraph = ({
 }) => {
   const [yesData, setYesData] = useState([]);
   const [noData, setNoData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
   const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
   useEffect(() => {
     async function getOptionGraph() {
-      setIsLoading(true);
       const response = await fetch(
         `/api/markets/${marketId}/options?optionId=${optionId}`,
       );
 
-      setIsLoading(false);
       if (!response.ok) {
         console.error(response);
         return toast({
@@ -42,6 +39,7 @@ const OptionGraph = ({
       const formattedNoData = formattedYesData.map((d) => {
         return [d[0], 1 - d[1]];
       });
+      console.log(formattedYesData, formattedNoData);
       setYesData(formattedYesData);
       setNoData(formattedNoData);
     }
@@ -53,6 +51,13 @@ const OptionGraph = ({
       {typeof window !== "undefined" && (
         <Chart
           options={{
+            yaxis: {
+              labels: {
+                formatter: (value) => {
+                  return value.toFixed(2);
+                },
+              },
+            },
             dataLabels: {
               enabled: false,
             },
