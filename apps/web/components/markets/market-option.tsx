@@ -111,7 +111,7 @@ const MarketOptionItem = ({
               <TabsTrigger value="holder">Holder breakdown</TabsTrigger>
             </TabsList>
             <TabsContent value="graph">
-              <OptionGraph marketId={marketId} optionId={marketOption.title} />
+              <OptionGraph marketId={marketId} optionId={marketOption.id} />
             </TabsContent>
             <TabsContent value="holder">
               <div className="grid grid-cols-2 space-x-10">
