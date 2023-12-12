@@ -20,8 +20,6 @@ export const airdrop = async (
     value: "500000000000000000", // 0.1
   });
 
-  await tx.wait();
-
   console.log("tx", tx);
 
   // Airdrop erc20 tokens to the user (contract addr 0x1157c6cc6e3679D885D0F31d84A66Ec27A88420d)
