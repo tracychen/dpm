@@ -23,12 +23,11 @@ export async function GET(
       return new Response(null, { status: 404 });
     }
 
-    const balance = await getTokenBalance(user.custodialAddress);
+    const { displayValue } = await getTokenBalance(user.custodialAddress);
 
     return new Response(
       JSON.stringify({
-        portfolio: 100,
-        balance: balance,
+        balance: parseFloat(displayValue),
       }),
     );
   } catch (error) {

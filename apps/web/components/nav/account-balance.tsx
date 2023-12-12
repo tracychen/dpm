@@ -7,45 +7,51 @@ import { toast } from "../ui/use-toast";
 
 interface AccountBalanceProps {
   user: Partial<User>;
+  portfolioBalance: number;
+  cashBalance: number;
 }
 
-export function AccountBalance({ user }: AccountBalanceProps) {
-  const [portfolioBalance, setPortfolioBalance] = useState<number>();
-  const [cashBalance, setCashBalance] = useState<number>();
-  const [isLoading, setIsLoading] = useState(true);
+export function AccountBalance({
+  user,
+  portfolioBalance,
+  cashBalance,
+}: AccountBalanceProps) {
+  // const [portfolioBalance, setPortfolioBalance] = useState<number>();
+  // const [cashBalance, setCashBalance] = useState<number>();
+  const [isLoading, setIsLoading] = useState(false);
 
   const balanceFormatter = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
   });
 
-  useEffect(() => {
-    const getPortfolioBalance = async () => {
-      setIsLoading(true);
-      const response = await fetch(`/api/users/${user.id}/balances`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      setIsLoading(false);
+  // useEffect(() => {
+  //   const getPortfolioBalance = async () => {
+  //     setIsLoading(true);
+  //     const response = await fetch(`/api/users/${user.id}/balances`, {
+  //       method: "GET",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     });
+  //     setIsLoading(false);
 
-      if (!response.ok) {
-        return toast({
-          title: "Error",
-          description: "Error fetching balance",
-          variant: "destructive",
-        });
-      }
+  //     if (!response.ok) {
+  //       return toast({
+  //         title: "Error",
+  //         description: "Error fetching balance",
+  //         variant: "destructive",
+  //       });
+  //     }
 
-      const { balance, portfolio } = await response.json();
+  //     const { balance, portfolio } = await response.json();
 
-      setPortfolioBalance(portfolio);
-      setCashBalance(balance.displayValue);
-      setIsLoading(false);
-    };
-    getPortfolioBalance();
-  }, []);
+  //     setPortfolioBalance(portfolio);
+  //     setCashBalance(balance.displayValue);
+  //     setIsLoading(false);
+  //   };
+  //   getPortfolioBalance();
+  // }, []);
 
   return (
     <>

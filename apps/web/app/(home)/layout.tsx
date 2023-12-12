@@ -6,13 +6,37 @@ import Logo from "@/components/nav/logo";
 import { CreateMarketDialog } from "@/components/create-market/create-market-dialog";
 import WalletConnectButton from "@/components/nav/wallet-connect-button";
 import { AccountBalance } from "@/components/nav/account-balance";
+import { prisma } from "@dpm/database";
+import { getTokenBalance } from "@/lib/thirdweb";
+import { User } from "next-auth";
 
 interface HomeLayoutProps {
   children?: React.ReactNode;
 }
 
+async function getBalance(user: User) {
+  const { displayValue } = await getTokenBalance(user.custodialAddress);
+  return parseFloat(displayValue);
+}
+
+async function getPortfolioTotal(userId: string) {
+  const userShares = await prisma.userShare.findMany({
+    where: {
+      userId: userId,
+    },
+  });
+
+  const total = userShares.reduce((acc, userShare) => {
+    return acc + userShare.shares;
+  }, 0);
+
+  return total;
+}
+
 export default async function HomeLayout({ children }: HomeLayoutProps) {
   const user = await getCurrentUser();
+  const total = user ? await getPortfolioTotal(user.id) : null;
+  const cash = user ? await getBalance(user) : null;
 
   return (
     <>
@@ -29,7 +53,11 @@ export default async function HomeLayout({ children }: HomeLayoutProps) {
             <WalletConnectButton />
           ) : (
             <>
-              <AccountBalance user={user} />
+              <AccountBalance
+                user={user}
+                portfolioBalance={total + cash}
+                cashBalance={cash}
+              />
               <CreateMarketDialog user={user} />
               <UserMenu imageUrl={user.imageUrl} evmAddress={user.evmAddress} />
             </>
