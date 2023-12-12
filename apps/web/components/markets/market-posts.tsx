@@ -3,7 +3,7 @@
 import { cn, formatDate, truncateStringMiddle } from "@/lib/utils";
 import { Post, Reaction, User } from "@dpm/database";
 import { Icons } from "../icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { toast } from "../ui/use-toast";
 import { User as NextAuthUser } from "next-auth";
@@ -50,11 +50,32 @@ const MarketPost = ({
     ).length,
   );
 
+  useEffect(() => {
+    if (!currentUser) {
+      setIsLikedByUser(false);
+      setIsDislikedByUser(false);
+      return;
+    }
+
+    setIsLikedByUser(
+      post.reactions.filter(
+        (reaction: Reaction) =>
+          reaction.reaction === "LIKE" && reaction.userId === currentUser.id,
+      ).length > 0,
+    );
+    setIsDislikedByUser(
+      post.reactions.filter(
+        (reaction: Reaction) =>
+          reaction.reaction === "DISLIKE" && reaction.userId === currentUser.id,
+      ).length > 0,
+    );
+  }, [currentUser]);
+
   async function handleLike() {
     if (!currentUser) {
       return toast({
         title: "Error",
-        description: "You must be logged in to like a post",
+        description: "You must be logged in to like a comment",
         variant: "destructive",
       });
     }
@@ -72,7 +93,7 @@ const MarketPost = ({
       console.error(response);
       return toast({
         title: "Error",
-        description: "Failed to like post",
+        description: "Failed to like comment",
         variant: "destructive",
       });
     }
@@ -113,7 +134,7 @@ const MarketPost = ({
       console.error(response);
       return toast({
         title: "Error",
-        description: "Failed to dislike post",
+        description: "Failed to dislike comment",
         variant: "destructive",
       });
     }
@@ -143,13 +164,13 @@ const MarketPost = ({
       console.error(response);
       return toast({
         title: "Error",
-        description: "Failed to delete post",
+        description: "Failed to delete comment",
         variant: "destructive",
       });
     }
 
     toast({
-      description: "Deleted post",
+      description: "Deleted comment",
     });
   }
 

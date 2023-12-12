@@ -45,8 +45,8 @@ const NewPostDialog = ({ marketId }: { marketId: string }) => {
     });
     setPostBody("");
     setOpen(false);
-    // redirect(`/markets/${marketId}`);
-    router.push(`/markets/${marketId}`);
+
+    router.refresh();
   }
 
   return (
