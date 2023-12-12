@@ -1,14 +1,12 @@
 import { Icons } from "../icons";
 import { calculatePercentChance, cn, formatDate } from "@/lib/utils";
-import { Market, UserShare } from "@dpm/database";
+import { MarketWithOptionsAndShares } from "@/models/Market.model";
 import { useMemo } from "react";
 
 export default function HomeBanner({
   market,
 }: {
-  market: Market & {
-    userShares: UserShare[];
-  };
+  market: MarketWithOptionsAndShares;
 }) {
   const percentChance = useMemo(() => {
     return calculatePercentChance(market.userShares);

@@ -1,23 +1,26 @@
 "use client";
 
 import { cn, formatDate, truncateStringMiddle } from "@/lib/utils";
-import { Post, Reaction, User } from "@dpm/database";
+import { Post, Reaction, User, UserShare } from "@dpm/database";
 import { Icons } from "../icons";
 import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { toast } from "../ui/use-toast";
 import { User as NextAuthUser } from "next-auth";
 import { useRouter } from "next/navigation";
+import { UserShareWithAddress } from "@/models/Market.model";
 
 const MarketPost = ({
   post,
   currentUser,
+  userShares,
 }: {
   post: Post & {
     reactions: Reaction[];
     user: User;
   };
   currentUser: NextAuthUser;
+  userShares: Partial<UserShareWithAddress>[];
 }) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -51,6 +54,10 @@ const MarketPost = ({
     post.reactions.filter(
       (reaction: Reaction) => reaction.reaction === "DISLIKE",
     ).length,
+  );
+
+  const posterShares = userShares.filter(
+    (userShare) => userShare.user.id === post.user.id,
   );
 
   useEffect(() => {
@@ -192,7 +199,21 @@ const MarketPost = ({
           {truncateStringMiddle(post.user.evmAddress)}
         </span>
         <span className="text-muted-foreground">holds</span>
-        <span className="font-semibold">TODO shares of Yes option</span>
+        {
+          <span className="font-semibold">
+            {posterShares.map((ps, i) => (
+              <span className="font-semibold">
+                {ps.shares.toLocaleString("en-US")} shares of{" "}
+                {ps.outcome === "YES" ? (
+                  <span className="text-green-700">Yes</span>
+                ) : (
+                  <span className="text-red-700">No</span>
+                )}
+                {i !== posterShares.length - 1 && ", "}
+              </span>
+            ))}
+          </span>
+        }
       </div>
       <div className="flex flex-col gap-2">
         <p className="whitespace-pre-wrap text-sm text-muted-foreground">
@@ -246,17 +267,24 @@ const MarketPost = ({
 const MarketPosts = ({
   posts,
   currentUser,
+  userShares,
 }: {
   posts: (Post & {
     reactions: Reaction[];
     user: User;
   })[];
   currentUser: NextAuthUser;
+  userShares: UserShareWithAddress[];
 }) => {
   return (
     <div className="flex flex-col gap-6">
       {posts.map((post) => (
-        <MarketPost key={post.id} post={post} currentUser={currentUser} />
+        <MarketPost
+          key={post.id}
+          post={post}
+          currentUser={currentUser}
+          userShares={userShares}
+        />
       ))}
     </div>
   );

@@ -6,16 +6,14 @@ import { useEffect, useState } from "react";
 import { toast } from "../ui/use-toast";
 import { Skeleton } from "../ui/skeleton";
 import { User } from "next-auth";
-import { Market, UserShare } from "@dpm/database";
 import { formatDate } from "@/lib/utils";
+import { MarketWithOptionsAndShares } from "@/models/Market.model";
 
 const SelectedMarket = ({
   market,
   currentUser,
 }: {
-  market: Market & {
-    userShares: UserShare[];
-  };
+  market: MarketWithOptionsAndShares;
   currentUser: User;
 }) => {
   const [posts, setPosts] = useState([]);
@@ -70,7 +68,11 @@ const SelectedMarket = ({
             <Skeleton className="h-32 w-full rounded-2xl" />
           </div>
         ) : (posts || []).length !== 0 ? (
-          <MarketPosts posts={posts} currentUser={currentUser} />
+          <MarketPosts
+            posts={posts}
+            currentUser={currentUser}
+            userShares={market.userShares}
+          />
         ) : (
           <span className="text-sm text-muted-foreground">
             No comments yet.

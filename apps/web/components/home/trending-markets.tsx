@@ -1,7 +1,7 @@
 import { calculatePercentChance, cn, formatDate } from "@/lib/utils";
 import { Icons } from "../icons";
 import Link from "next/link";
-import { Market, UserShare } from "@dpm/database";
+import { MarketWithOptionsAndShares } from "@/models/Market.model";
 
 function TrendingMarket({
   id,
@@ -64,9 +64,7 @@ function TrendingMarket({
 export default function TrendingMarkets({
   markets,
 }: {
-  markets: (Market & {
-    userShares: UserShare[];
-  })[];
+  markets: MarketWithOptionsAndShares[];
 }) {
   return (
     <div className="flex flex-col">

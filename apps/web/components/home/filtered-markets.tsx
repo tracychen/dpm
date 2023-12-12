@@ -4,17 +4,15 @@ import Image from "next/image";
 import { calculatePercentChance, cn } from "@/lib/utils";
 import { useMemo, useState } from "react";
 import { SelectedMarket } from "./selected-market";
-import { Market, UserShare } from "@dpm/database";
 import { User } from "next-auth";
+import { MarketWithOptionsAndShares } from "@/models/Market.model";
 
 function MarketCard({
   market,
   isSelectedMarket,
   setSelectedMarketId,
 }: {
-  market: Market & {
-    userShares: UserShare[];
-  };
+  market: MarketWithOptionsAndShares;
   isSelectedMarket: boolean;
   setSelectedMarketId: (id: string | null) => void;
 }) {
@@ -100,9 +98,7 @@ export default function FilteredMarkets({
   markets,
   currentUser,
 }: {
-  markets: (Market & {
-    userShares: UserShare[];
-  })[];
+  markets: MarketWithOptionsAndShares[];
   currentUser: User;
 }) {
   const [currentTopic, setCurrentTopic] = useState("All");

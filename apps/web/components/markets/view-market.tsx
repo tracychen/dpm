@@ -156,7 +156,11 @@ const ViewMarket = ({
               </span>
               <NewPostDialog marketId={market.id} />
             </div>
-            <MarketPosts posts={posts} currentUser={currentUser} />
+            <MarketPosts
+              posts={posts}
+              currentUser={currentUser}
+              userShares={market.userShares}
+            />
           </div>
         </div>
 
