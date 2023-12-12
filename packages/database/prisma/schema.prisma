@@ -122,6 +122,8 @@ model Market {
   closeAt     DateTime
   options     Option[]
 
+  contractAddress String?
+
   // UserShares
   userShares UserShare[]
 
