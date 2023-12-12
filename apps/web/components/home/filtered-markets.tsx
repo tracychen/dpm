@@ -7,6 +7,7 @@ import { useMemo, useState } from "react";
 import { Market } from "@/models/Market.model";
 import { markets } from "@/lib/data";
 import { SelectedMarket } from "./selected-market";
+import { useSession } from "next-auth/react";
 
 function MarketCard({
   market,
@@ -113,7 +114,10 @@ const Topic = ({
 
 export default function FilteredMarkets() {
   const [currentTopic, setCurrentTopic] = useState("All");
-  const [selectedMarketId, setSelectedMarketId] = useState<string | null>();
+  const [selectedMarketId, setSelectedMarketId] = useState<string | null>(
+    markets[0].id,
+  );
+  const { data: session } = useSession();
 
   const topics = useMemo(
     () =>
@@ -137,7 +141,7 @@ export default function FilteredMarkets() {
         ))}
       </div>
       <div className="flex gap-x-8">
-        <div className="flex w-1/3 flex-col gap-4">
+        <div className="flex w-1/3 min-w-[350px] flex-col gap-4">
           {markets
             .filter(
               (market) =>
@@ -156,6 +160,7 @@ export default function FilteredMarkets() {
           {selectedMarketId && (
             <SelectedMarket
               market={markets.find((market) => market.id === selectedMarketId)}
+              currentUser={session?.user}
             />
           )}
         </div>

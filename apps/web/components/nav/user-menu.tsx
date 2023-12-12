@@ -21,7 +21,7 @@ interface UserMenuProps {
   evmAddress: string;
 }
 
-export async function UserMenu({ imageUrl, evmAddress }: UserMenuProps) {
+export function UserMenu({ imageUrl, evmAddress }: UserMenuProps) {
   const router = useRouter();
 
   // const username = await fetchEnsName({

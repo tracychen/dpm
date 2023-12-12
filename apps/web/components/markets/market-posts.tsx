@@ -217,7 +217,7 @@ const MarketPost = ({
   );
 };
 
-const MarketPosts = async ({
+const MarketPosts = ({
   posts,
   currentUser,
 }: {

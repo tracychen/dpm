@@ -10,10 +10,10 @@ export default async function HomePage() {
   return (
     <div className="flex flex-col gap-y-10">
       <div className="flex gap-x-8">
-        <div className="w-2/3">
+        <div className="w-full md:w-2/3">
           <HomeBanner />
         </div>
-        <div className="w-1/3">
+        <div className="hidden w-1/3 md:flex">
           <TrendingMarkets />
         </div>
       </div>

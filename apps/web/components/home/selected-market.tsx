@@ -4,15 +4,19 @@ import { Button } from "../ui/button";
 import { MarketPosts } from "../markets/market-posts";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
 import { toast } from "../ui/use-toast";
 import { Skeleton } from "../ui/skeleton";
+import { User } from "next-auth";
 
-const SelectedMarket = ({ market }: { market: Market }) => {
+const SelectedMarket = ({
+  market,
+  currentUser,
+}: {
+  market: Market;
+  currentUser: User;
+}) => {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
-  const { data: session } = useSession();
 
   useEffect(() => {
     async function fetchPosts() {
@@ -26,7 +30,7 @@ const SelectedMarket = ({ market }: { market: Market }) => {
         console.error(response);
         return toast({
           title: "Error",
-          description: "Failed to fetch posts",
+          description: "Failed to fetch comments",
           variant: "destructive",
         });
       }
@@ -63,7 +67,7 @@ const SelectedMarket = ({ market }: { market: Market }) => {
             <Skeleton className="h-32 w-full rounded-2xl" />
           </div>
         ) : (posts || []).length !== 0 ? (
-          <MarketPosts posts={posts} currentUser={session?.user} />
+          <MarketPosts posts={posts} currentUser={currentUser} />
         ) : (
           <span className="text-sm text-muted-foreground">
             No comments yet.

@@ -11,7 +11,7 @@ import { Textarea } from "../ui/textarea";
 import { useState } from "react";
 import { toast } from "../ui/use-toast";
 import { Icons } from "../icons";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const NewPostDialog = ({ marketId }: { marketId: string }) => {
   const [postBody, setPostBody] = useState("");
