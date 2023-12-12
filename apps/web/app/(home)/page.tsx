@@ -2,14 +2,25 @@ import FilteredMarkets from "@/components/home/filtered-markets";
 import HomeBanner from "@/components/home/home-banner";
 import TrendingMarkets from "@/components/home/trending-markets";
 import { getCurrentUser } from "@/lib/session";
+import { prisma } from "@dpm/database";
 
 export const metadata = {
   title: "Home | PEEK",
 };
 
 async function getMarkets() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/markets`);
-  const markets = await res.json();
+  const markets = await prisma.market.findMany({
+    include: {
+      user: {
+        select: {
+          id: true,
+          evmAddress: true,
+        },
+      },
+      options: true,
+      userShares: true,
+    },
+  });
   return markets;
 }
 

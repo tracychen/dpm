@@ -9,21 +9,19 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Outcome } from "@/models/Outcome.model";
 import { OrderAction } from "@/models/Order.model";
-import { Market, Option, Post, Reaction, User, UserShare } from "@dpm/database";
+import { Post, Reaction, User } from "@dpm/database";
 import { MarketPosts } from "./market-posts";
 import { NewPostDialog } from "./new-post-dialog";
 import { User as NextAuthUser } from "next-auth";
 import { OptionGraph } from "./option-graph";
+import { MarketWithOptionsAndShares } from "@/models/Market.model";
 
 const ViewMarket = ({
   market,
   posts,
   currentUser,
 }: {
-  market: Market & {
-    userShares: UserShare[];
-    options: Option[];
-  };
+  market: MarketWithOptionsAndShares;
   posts: (Post & {
     reactions: Reaction[];
     user: User;
@@ -101,6 +99,7 @@ const ViewMarket = ({
               <div key={index}>
                 <Separator className="my-4" />
                 <MarketOptionItem
+                  userShares={market.userShares}
                   marketId={market.id}
                   marketOption={option}
                   setSelectedMarketOption={setSelectedMarketOption}
@@ -158,17 +157,6 @@ const ViewMarket = ({
               <NewPostDialog marketId={market.id} />
             </div>
             <MarketPosts posts={posts} currentUser={currentUser} />
-          </div>
-          <Separator className="my-6" />
-          <div className="grid grid-cols-2">
-            <div className="flex flex-col">
-              <span className="text-xl font-semibold">Yes holders</span>
-              <Separator className="my-4" />
-              {/* TODO */}
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xl font-semibold">No holders</span>
-            </div>
           </div>
         </div>
 

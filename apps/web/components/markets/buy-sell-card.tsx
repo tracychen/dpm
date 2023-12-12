@@ -7,15 +7,16 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { OrderAction } from "@/models/Order.model";
-import { Option, UserShare } from "@dpm/database";
+import { Option } from "@dpm/database";
 import { toast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { UserShareWithAddress } from "@/models/Market.model";
 
 const OutcomeSelect = ({
   selectedAction,
@@ -76,7 +77,7 @@ const BuySellCard = ({
   setSelectedOrderAction,
   selectedOrderAction,
 }: {
-  userShares: UserShare[];
+  userShares: UserShareWithAddress[];
   selectedMarketOption: Option;
   selectedAction: Outcome;
   marketType: "BINARY" | "MULTIPLE_CHOICE";
@@ -95,7 +96,7 @@ const BuySellCard = ({
     return userShares
       .filter((share) => share.optionId === selectedMarketOption.id)
       .filter((share) => share.outcome === selectedAction)
-      .filter((share) => share.userId === session.user.id)
+      .filter((share) => share.user.id === session.user.id)
       .reduce((acc, share) => acc + share.shares, 0);
   }, [userShares, selectedMarketOption, selectedAction]);
 

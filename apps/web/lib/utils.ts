@@ -1,4 +1,4 @@
-import { UserShare } from "@dpm/database";
+import { UserShareWithAddress } from "@/models/Market.model";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -46,7 +46,9 @@ export function formatDate(date: Date, includeTime = true) {
   return formattedDate;
 }
 
-export function calculatePercentChance(userShares: UserShare[]) {
+export function calculatePercentChance(
+  userShares: Partial<UserShareWithAddress>[],
+) {
   const yesShares = userShares.filter(
     (userShares) => userShares.outcome === "YES",
   );

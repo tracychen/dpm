@@ -24,7 +24,19 @@ async function getMarket(id: string) {
         },
       },
       options: true,
-      userShares: true,
+      userShares: {
+        select: {
+          user: {
+            select: {
+              id: true,
+              evmAddress: true,
+            },
+          },
+          shares: true,
+          outcome: true,
+          optionId: true,
+        },
+      },
     },
   });
   return market;

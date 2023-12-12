@@ -1,27 +1,22 @@
-enum MarketType {
-  BINARY = "binary",
-  MULTIPLE_CHOICE = "mulipleChoice",
-}
+import { Market, Option } from "@dpm/database";
 
-interface MarketOption {
-  label: string;
-  amountBet: number;
-  price: number;
-}
+type UserShareWithAddress = {
+  user: {
+    id: string;
+    evmAddress: string;
+  };
+  optionId: string;
+  shares: number;
+  outcome: string;
+};
 
-interface Market {
-  id: string;
-  prompt: string;
-  percentChance: number;
-  description?: string;
-  direction: "up" | "down" | "none";
-  date: string;
-  bettedCount: number;
-  topic: string;
-  imageUrl?: string;
-  bannerUrl?: string;
-  options?: MarketOption[];
-  type: MarketType;
-}
+type MarketWithOptionsAndShares = Market & {
+  options: Option[];
+  user: {
+    id: string;
+    evmAddress: string;
+  };
+  userShares: UserShareWithAddress[];
+};
 
-export { type Market, type MarketOption, MarketType };
+export { type MarketWithOptionsAndShares, type UserShareWithAddress };
