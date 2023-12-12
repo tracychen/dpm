@@ -7,14 +7,15 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { OrderAction } from "@/models/Order.model";
-import { Option } from "@dpm/database";
+import { Option, UserShare } from "@dpm/database";
 import { toast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const OutcomeSelect = ({
   selectedAction,
@@ -67,6 +68,7 @@ const OutcomeSelect = ({
 };
 
 const BuySellCard = ({
+  userShares,
   selectedMarketOption,
   selectedAction,
   marketType,
@@ -74,6 +76,7 @@ const BuySellCard = ({
   setSelectedOrderAction,
   selectedOrderAction,
 }: {
+  userShares: UserShare[];
   selectedMarketOption: Option;
   selectedAction: Outcome;
   marketType: "BINARY" | "MULTIPLE_CHOICE";
@@ -84,7 +87,17 @@ const BuySellCard = ({
   const [amount, setAmount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const { data: session } = useSession();
+
   const router = useRouter();
+
+  const balance = useMemo(() => {
+    return userShares
+      .filter((share) => share.optionId === selectedMarketOption.id)
+      .filter((share) => share.outcome === selectedAction)
+      .filter((share) => share.userId === session.user.id)
+      .reduce((acc, share) => acc + share.shares, 0);
+  }, [userShares, selectedMarketOption, selectedAction]);
 
   async function buyShares() {
     setIsLoading(true);
@@ -218,10 +231,11 @@ const BuySellCard = ({
                 <span className="text-muted-foreground">Shares</span>
                 <span>{amount}</span>
               </div>
-              {/* <div className="flex justify-between">
-                <span className="text-muted-foreground">Potential return</span>
-                <span className="text-green-700">{amount}</span>
-              </div> */}
+              <div className="flex w-full space-x-1 rounded-md bg-secondary p-4">
+                <span className="text-muted-foreground">📈 You own</span>
+                <span>{balance}</span>
+                <span className="text-muted-foreground">shares</span>
+              </div>
             </div>
           </TabsContent>
           <TabsContent value={OrderAction.SELL}>
@@ -248,7 +262,7 @@ const BuySellCard = ({
                 className="w-full"
                 size="full"
                 onClick={sellShares}
-                disabled={amount < 1}
+                disabled={amount < 1 && amount > balance}
               >
                 {isLoading ? (
                   <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
@@ -268,6 +282,11 @@ const BuySellCard = ({
                   Est. amount received
                 </span>
                 <span>${amount}</span>
+              </div>
+              <div className="flex w-full space-x-1 rounded-md bg-secondary p-4">
+                <span className="text-muted-foreground">📈 You own</span>
+                <span>{balance}</span>
+                <span className="text-muted-foreground">shares</span>
               </div>
             </div>
           </TabsContent>

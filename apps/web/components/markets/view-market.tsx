@@ -174,6 +174,7 @@ const ViewMarket = ({
 
         <div className="flex w-1/3 flex-col">
           <BuySellCard
+            userShares={market.userShares}
             selectedAction={selectedBetAction}
             selectedMarketOption={selectedMarketOption}
             marketType={market.marketType}

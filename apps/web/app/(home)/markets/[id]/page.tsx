@@ -5,17 +5,28 @@ import { getCurrentUser } from "@/lib/session";
 import { prisma } from "@dpm/database";
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
-  const market = await getMarket(params.id);
+  // const market = await getMarket(params.id);
   return {
-    title: `${market.id} | PEEK`,
+    title: `View market | PEEK`,
   };
 }
 
 async function getMarket(id: string) {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/markets/${id}`,
-  );
-  const market = await res.json();
+  const market = await prisma.market.findUnique({
+    where: {
+      id: id,
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          evmAddress: true,
+        },
+      },
+      options: true,
+      userShares: true,
+    },
+  });
   return market;
 }
 
@@ -44,7 +55,11 @@ async function getMarketPosts(id: string) {
   return posts;
 }
 
-export default async function MarketPage({ params }) {
+export default async function MarketPage({
+  params,
+}: {
+  params: { id: string };
+}) {
   const market = await getMarket(params.id);
   const posts = await getMarketPosts(params.id);
   const currentUser = await getCurrentUser();
