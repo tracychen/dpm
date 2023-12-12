@@ -18,7 +18,6 @@ import { Post, Reaction, User } from "@dpm/database";
 import { MarketPosts } from "./market-posts";
 import { NewPostDialog } from "./new-post-dialog";
 import { User as NextAuthUser } from "next-auth";
-import { OptionGraph } from "./option-graph";
 import { MarketWithOptionsAndShares } from "@/models/Market.model";
 import { BinaryOption } from "./binary-option";
 
@@ -163,6 +162,7 @@ const ViewMarket = ({
 
         <div className="flex w-1/3 flex-col">
           <BuySellCard
+            currentUser={currentUser}
             userShares={market.userShares}
             selectedAction={selectedBetAction}
             selectedMarketOption={selectedMarketOption}

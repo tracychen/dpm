@@ -15,8 +15,8 @@ import { OrderAction } from "@/models/Order.model";
 import { Option } from "@dpm/database";
 import { toast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 import { UserShareWithAddress } from "@/models/Market.model";
+import { User } from "next-auth";
 
 const OutcomeSelect = ({
   selectedAction,
@@ -69,6 +69,7 @@ const OutcomeSelect = ({
 };
 
 const BuySellCard = ({
+  currentUser,
   userShares,
   selectedMarketOption,
   selectedAction,
@@ -77,6 +78,7 @@ const BuySellCard = ({
   setSelectedOrderAction,
   selectedOrderAction,
 }: {
+  currentUser: User;
   userShares: UserShareWithAddress[];
   selectedMarketOption: Option;
   selectedAction: Outcome;
@@ -88,15 +90,13 @@ const BuySellCard = ({
   const [amount, setAmount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { data: session } = useSession();
-
   const router = useRouter();
 
   const balance = useMemo(() => {
     return userShares
       .filter((share) => share.optionId === selectedMarketOption.id)
       .filter((share) => share.outcome === selectedAction)
-      .filter((share) => share.user.id === session.user.id)
+      .filter((share) => share.user.id === currentUser?.id)
       .reduce((acc, share) => acc + share.shares, 0);
   }, [userShares, selectedMarketOption, selectedAction]);
 
@@ -232,11 +232,13 @@ const BuySellCard = ({
                 <span className="text-muted-foreground">Shares</span>
                 <span>{amount}</span>
               </div>
-              <div className="flex w-full space-x-1 rounded-md bg-secondary p-4">
-                <span className="text-muted-foreground">📈 You own</span>
-                <span>{balance}</span>
-                <span className="text-muted-foreground">shares</span>
-              </div>
+              {currentUser && (
+                <div className="flex w-full space-x-1 rounded-md bg-secondary p-4">
+                  <span className="text-muted-foreground">📈 You own</span>
+                  <span>{balance}</span>
+                  <span className="text-muted-foreground">shares</span>
+                </div>
+              )}
             </div>
           </TabsContent>
           <TabsContent value={OrderAction.SELL}>
@@ -284,11 +286,13 @@ const BuySellCard = ({
                 </span>
                 <span>${amount}</span>
               </div>
-              <div className="flex w-full space-x-1 rounded-md bg-secondary p-4">
-                <span className="text-muted-foreground">📈 You own</span>
-                <span>{balance}</span>
-                <span className="text-muted-foreground">shares</span>
-              </div>
+              {currentUser && (
+                <div className="flex w-full space-x-1 rounded-md bg-secondary p-4">
+                  <span className="text-muted-foreground">📈 You own</span>
+                  <span>{balance}</span>
+                  <span className="text-muted-foreground">shares</span>
+                </div>
+              )}
             </div>
           </TabsContent>
         </Tabs>
