@@ -105,6 +105,7 @@ const ViewMarket = ({
               <div key={index}>
                 <Separator className="my-4" />
                 <MarketOptionItem
+                  marketId={market.id}
                   marketOption={option}
                   setSelectedMarketOption={setSelectedMarketOption}
                   setSelectedBetAction={setSelectedBetAction}

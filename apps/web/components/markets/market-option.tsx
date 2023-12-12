@@ -6,8 +6,10 @@ import { MarketOption } from "@/models/Market.model";
 import { BetAction } from "@/models/Bet.model";
 import { cn } from "@/lib/utils";
 import { OrderAction } from "@/models/Order.model";
+import { OptionGraph } from "./option-graph";
 
 const MarketOptionItem = ({
+  marketId,
   marketOption,
   setSelectedMarketOption,
   setSelectedBetAction,
@@ -15,6 +17,7 @@ const MarketOptionItem = ({
   selectedBetAction,
   selectedOrderAction,
 }: {
+  marketId: string;
   marketOption: MarketOption;
   isSelected: boolean;
   selectedBetAction: BetAction;
@@ -85,7 +88,9 @@ const MarketOptionItem = ({
               <TabsTrigger value="graph">Graph</TabsTrigger>
               <TabsTrigger value="resolution">Resolution</TabsTrigger>
             </TabsList>
-            <TabsContent value="graph"></TabsContent>
+            <TabsContent value="graph">
+              <OptionGraph marketId={marketId} optionId={marketOption.label} />
+            </TabsContent>
             <TabsContent value="resolution">
               {/* TODO figure out what goes here per option */}
               <div className="py-6">{marketOption.label}</div>
