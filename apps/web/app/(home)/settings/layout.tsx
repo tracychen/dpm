@@ -11,8 +11,8 @@ const sidebarNavItems = [
     href: "/settings",
   },
   {
-    title: "Layout",
-    href: "/settings/layout",
+    title: "Display",
+    href: "/settings",
   },
 ];
 

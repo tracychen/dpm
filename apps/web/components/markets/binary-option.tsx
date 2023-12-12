@@ -25,7 +25,7 @@ const BinaryOption = ({ market }: { market: MarketWithOptionsAndShares }) => {
   return (
     <>
       <OptionGraph marketId={market.id} optionId={market.options[0].id} />
-      <div className="grid grid-cols-2 space-x-10">
+      <div className="hidden grid-cols-2 space-x-10 md:grid">
         <div className="flex flex-col">
           <div className="flex justify-between pt-4 text-xl font-semibold">
             <span>Yes holders</span>

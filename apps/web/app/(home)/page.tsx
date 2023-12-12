@@ -42,11 +42,11 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col gap-y-10">
-      <div className="flex gap-x-8">
-        <div className="w-full md:w-2/3">
+      <div className="hidden gap-x-8 md:flex">
+        <div className="w-2/3">
           <HomeBanner market={markets[0]} />
         </div>
-        <div className="hidden w-1/3 md:flex">
+        <div className="w-1/3">
           <TrendingMarkets markets={markets} />
         </div>
       </div>

@@ -66,7 +66,7 @@ const MarketOptionItem = ({
             <span>${totalBet.toLocaleString("en-US")} bet</span>
           </div>
         </div>
-        <div className="flex items-center gap-x-4">
+        <div className="flex flex-col items-center gap-2 md:flex-row md:gap-4">
           <Button
             variant="positive"
             className={cn(
@@ -116,7 +116,7 @@ const MarketOptionItem = ({
             <TabsContent value="holder">
               <div className="grid grid-cols-2 space-x-10">
                 <div className="flex flex-col">
-                  <div className="flex justify-between pt-4 text-xl font-semibold">
+                  <div className="flex justify-between pt-4 font-semibold md:text-xl">
                     <span>Yes holders</span>
                     <span className="text-muted-foreground">Shares</span>
                   </div>
@@ -134,7 +134,7 @@ const MarketOptionItem = ({
                   ))}
                 </div>
                 <div className="flex flex-col">
-                  <div className="flex justify-between pt-4 text-xl font-semibold">
+                  <div className="flex justify-between pt-4 font-semibold md:text-xl">
                     <span>No holders</span>
                     <span className="text-muted-foreground">Shares</span>
                   </div>

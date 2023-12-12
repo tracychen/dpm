@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import { SelectedMarket } from "./selected-market";
 import { User } from "next-auth";
 import { MarketWithOptionsAndShares } from "@/models/Market.model";
+import Link from "next/link";
 
 function MarketCard({
   market,
@@ -16,7 +17,7 @@ function MarketCard({
   isSelectedMarket: boolean;
   setSelectedMarketId: (id: string | null) => void;
 }) {
-  const { probability, optionTitle } = useMemo(() => {
+  const { probability } = useMemo(() => {
     return calculatePercentChance(market.options, market.userShares);
   }, [market.userShares]);
 
@@ -74,6 +75,57 @@ function MarketCard({
   );
 }
 
+function MobileMarketCard({ market }: { market: MarketWithOptionsAndShares }) {
+  const { probability } = useMemo(() => {
+    return calculatePercentChance(market.options, market.userShares);
+  }, [market.userShares]);
+
+  return (
+    <Link
+      className="flex w-full flex-col gap-y-4 rounded-2xl border p-4 hover:cursor-pointer hover:bg-secondary"
+      href={`/markets/${market.id}`}
+      style={{ scrollbarGutter: "stable" }}
+    >
+      <div className="flex items-center gap-x-6">
+        <div className="aspect-square h-[100px] w-[100px] flex-shrink-0 overflow-hidden rounded-2xl md:h-[120px] md:w-[120px]">
+          <Image
+            src={market.imageUrl || "https://picsum.photos/seed/picsum/200"}
+            alt={market.title}
+            width={200}
+            height={200}
+            className="h-full w-full object-cover"
+          />
+        </div>
+        <div className="flex flex-col gap-y-2">
+          <div>
+            <span className="text-sm font-semibold text-accent">
+              {market.topic}
+            </span>
+          </div>
+          <div className="space-y-1">
+            <div className="line-clamp-1 flex items-center justify-between text-lg font-semibold md:text-xl">
+              <span>{market.title}</span>
+            </div>
+            <div
+              className={cn(
+                "flex items-center",
+                probability > 50 && "text-green-700",
+                probability < 50 && "text-red-700",
+                probability === 50 && "text-muted-foreground",
+              )}
+            >
+              <span className="font-semibold md:text-xl">{probability}%</span>
+              <span className="md:text-md ml-1 text-sm font-normal">
+                chance
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 const Topic = ({
   topic,
   selected,
@@ -117,7 +169,10 @@ export default function FilteredMarkets({
   return (
     <div className="flex flex-col">
       {/* TODO overflow scroll */}
-      <div className="flex gap-x-4 overflow-hidden py-8">
+      <div
+        className="flex gap-x-4 overflow-x-auto py-4 md:py-8"
+        style={{ scrollbarGutter: "stable" }}
+      >
         {topics.map((topic) => (
           <Topic
             key={topic}
@@ -128,22 +183,29 @@ export default function FilteredMarkets({
         ))}
       </div>
       <div className="flex gap-x-8">
-        <div className="flex w-1/3 min-w-[350px] flex-col gap-4">
+        <div className="flex w-full flex-col gap-4 md:w-1/3 md:min-w-[350px]">
           {markets
             .filter(
               (market) =>
                 market.topic === currentTopic || currentTopic === "All",
             )
             .map((market) => (
-              <MarketCard
-                key={market.id}
-                market={market}
-                isSelectedMarket={selectedMarketId === market.id}
-                setSelectedMarketId={setSelectedMarketId}
-              />
+              <>
+                <div className="hidden md:block">
+                  <MarketCard
+                    key={market.id}
+                    market={market}
+                    isSelectedMarket={selectedMarketId === market.id}
+                    setSelectedMarketId={setSelectedMarketId}
+                  />
+                </div>
+                <div className="md:hidden">
+                  <MobileMarketCard key={market.id} market={market} />
+                </div>
+              </>
             ))}
         </div>
-        <div className="w-2/3">
+        <div className="hidden w-2/3 md:flex">
           {selectedMarketId && (
             <SelectedMarket
               market={markets.find((market) => market.id === selectedMarketId)}

@@ -188,26 +188,28 @@ const MarketPost = ({
 
   return (
     <div className="flex flex-col gap-4 rounded-2xl border p-6">
-      <div className="flex items-center gap-1">
+      <div className="flex flex-col items-center gap-1 md:flex-row">
         <Avatar className="mr-1 h-10 w-10">
           <AvatarImage src={post.user.imageUrl} alt={post.user.evmAddress} />
           <AvatarFallback>
             <Icons.user className="h-5 w-5" />
           </AvatarFallback>
         </Avatar>
-        {currentUser && currentUser.id === post.user.id ? (
-          <>
-            <span className="font-semibold text-accent">You</span>{" "}
-            <span className="text-muted-foreground">hold</span>
-          </>
-        ) : (
-          <>
-            <span className="font-semibold text-accent">
-              {truncateStringMiddle(post.user.evmAddress)}
-            </span>
-            <span className="text-muted-foreground">holds</span>
-          </>
-        )}
+        <div>
+          {currentUser && currentUser.id === post.user.id ? (
+            <>
+              <span className="font-semibold text-accent">You</span>{" "}
+              <span className="text-muted-foreground">hold</span>
+            </>
+          ) : (
+            <>
+              <span className="font-semibold text-accent">
+                {truncateStringMiddle(post.user.evmAddress)}
+              </span>{" "}
+              <span className="text-muted-foreground">holds</span>
+            </>
+          )}
+        </div>
         {
           <span className="font-semibold">
             {posterShares.length > 0

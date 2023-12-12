@@ -40,10 +40,10 @@ export default async function HomeLayout({ children }: HomeLayoutProps) {
 
   return (
     <>
-      <div className="sticky top-0 z-20 flex items-center justify-between bg-background px-2 py-6 shadow-[0_40px_40px_0px_rgb(0,0,0,0.1)] sm:px-10">
+      <div className="sticky top-0 z-20 flex items-center justify-between bg-background px-4 py-6 shadow-[0_40px_40px_0px_rgb(0,0,0,0.1)] sm:px-10">
         <div className="flex items-center gap-x-2">
           <Link href="/" className="flex items-center gap-x-2">
-            <div className="w-32 sm:w-[112px]">
+            <div className="w-24 sm:w-[112px]">
               <Logo />
             </div>
           </Link>
@@ -58,13 +58,15 @@ export default async function HomeLayout({ children }: HomeLayoutProps) {
                 portfolioBalance={total + cash}
                 cashBalance={cash}
               />
-              <CreateMarketDialog user={user} />
-              <UserMenu imageUrl={user.imageUrl} evmAddress={user.evmAddress} />
+              <div className="hidden sm:block">
+                <CreateMarketDialog user={user} />
+              </div>
+              <UserMenu user={user} />
             </>
           )}
         </div>
       </div>
-      <main className="flex w-full flex-1 flex-col overflow-hidden px-2 py-8 sm:px-10">
+      <main className="flex w-full flex-1 flex-col overflow-hidden px-4 py-2 sm:px-10 sm:py-8">
         {children}
       </main>
     </>

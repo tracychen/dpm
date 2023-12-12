@@ -12,48 +12,47 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { truncateString } from "@/lib/utils";
-import { Address, disconnect, fetchEnsName } from "@wagmi/core";
+import { disconnect } from "@wagmi/core";
 import { useRouter } from "next/navigation";
 import { Icons } from "../icons";
+import { CreateMarketDialog } from "../create-market/create-market-dialog";
+import { User } from "next-auth";
 
-interface UserMenuProps {
-  imageUrl: string;
-  evmAddress: string;
-}
-
-export function UserMenu({ imageUrl, evmAddress }: UserMenuProps) {
+export function UserMenu({ user }: { user: User }) {
   const router = useRouter();
 
   // const username = await fetchEnsName({
   //   address: evmAddress as Address,
   //   chainId: 1,
   // });
-  // TODO replace with correct username
-  const username = truncateString(evmAddress);
+  const username = truncateString(user.evmAddress);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <div className="flex items-center gap-x-2 hover:cursor-pointer">
           <Avatar className="h-10 w-10">
-            <AvatarImage src={imageUrl} alt={username} />
+            <AvatarImage src={user.imageUrl} alt={username} />
             <AvatarFallback>
               <Icons.user className="h-5 w-5" />
             </AvatarFallback>
           </Avatar>
-          <Icons.caretdown className="h-4 w-4" />
+          <Icons.caretdown className="hidden h-4 w-4 sm:block" />
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">
-              {username || truncateString(evmAddress)}
+              {username || truncateString(user.evmAddress)}
             </p>
             <p className="text-xs leading-none text-muted-foreground">
-              {truncateString(evmAddress)}
+              {truncateString(user.evmAddress)}
             </p>
           </div>
         </DropdownMenuLabel>
+        <DropdownMenuItem className="cursor-pointer sm:hidden">
+          <CreateMarketDialog user={user} />
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem

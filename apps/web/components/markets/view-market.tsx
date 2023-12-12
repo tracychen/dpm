@@ -47,13 +47,15 @@ const ViewMarket = ({
   return (
     <>
       <div className="flex gap-8">
-        <div className="flex w-2/3 flex-col">
-          <img
-            src={market.bannerUrl || "https://picsum.photos/200/300"}
-            className="h-[100px] w-full rounded-2xl object-cover sm:h-[334px]"
-          />
-          <div className="space-y-4 pt-6">
-            <div className="flex">
+        <div className="flex w-full flex-col md:w-2/3">
+          <div className="hidden md:flex">
+            <img
+              src={market.bannerUrl || "https://picsum.photos/200/300"}
+              className="h-[100px] w-full rounded-2xl object-cover sm:h-[334px]"
+            />
+          </div>
+          <div className="space-y-4 md:pt-6">
+            <div className="hidden md:flex">
               <div className="whitespace-nowrap rounded-full bg-secondary p-[10px] px-4 font-semibold text-muted-foreground">
                 {market.topic}
               </div>
@@ -78,20 +80,20 @@ const ViewMarket = ({
                   <div className="flex gap-x-4">
                     <div className="flex items-center text-muted-foreground">
                       <Icons.timer className="mr-1 h-6 w-6" />
-                      <span className="text-lg">
+                      <span className="md:text-lg">
                         {formatDate(new Date(market.closeAt), false)}
                       </span>
                     </div>
-                    <div className="flex items-center text-muted-foreground">
+                    <div className="hidden items-center text-muted-foreground md:flex">
                       <Icons.user className="mr-1 h-6 w-6" />
-                      <span className="text-lg">
+                      <span className="md:text-lg">
                         {market.userShares.length.toLocaleString("en-US")}{" "}
                         betted
                       </span>
                     </div>
                   </div>
                 </div>
-                <div className="text-lg text-muted-foreground">
+                <div className="text-muted-foreground md:text-lg">
                   {optionTitle}
                 </div>
               </div>
@@ -116,13 +118,26 @@ const ViewMarket = ({
               </div>
             ))
           )}
+          <div className="py-2 md:hidden">
+            <Separator className="mb-6 mt-4" />
+            <BuySellCard
+              currentUser={currentUser}
+              userShares={market.userShares}
+              selectedAction={selectedBetAction}
+              selectedMarketOption={selectedMarketOption}
+              marketType={market.marketType}
+              setSelectedAction={setSelectedBetAction}
+              setSelectedOrderAction={setSelectedOrderAction}
+              selectedOrderAction={selectedOrderAction}
+            />
+          </div>
           <Separator className="my-6" />
           <div className="space-y-6">
             <span className="text-2xl font-semibold">About</span>
             <div className="text-muted-foreground">{market.description}</div>
-            <div className="flex gap-x-6">
+            <div className="flex gap-x-2 md:gap-x-6">
               <div className="flex w-44 rounded-lg border">
-                <div className="flex gap-x-4 p-4">
+                <div className="flex gap-x-2 p-4 sm:gap-x-4">
                   <div className="rounded-sm bg-muted-foreground/10 p-2">
                     <Icons.wallet className="h-6 w-6" />
                   </div>
@@ -135,7 +150,7 @@ const ViewMarket = ({
                 </div>
               </div>
               <div className="flex w-44 rounded-lg border">
-                <div className="flex gap-x-4 p-4">
+                <div className="flex gap-x-2 p-4 sm:gap-x-4">
                   <div className="rounded-sm bg-muted-foreground/10 p-2">
                     <Icons.wallet className="h-6 w-6" />
                   </div>
@@ -173,7 +188,7 @@ const ViewMarket = ({
           </div>
         </div>
 
-        <div className="sticky flex w-1/3 flex-col">
+        <div className="sticky hidden w-1/3 flex-col md:flex">
           <BuySellCard
             currentUser={currentUser}
             userShares={market.userShares}
