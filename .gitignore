@@ -38,3 +38,8 @@ dist
 
 # eslint cache
 .eslintcache
+
+# protocol
+typechain-types
+artifacts
+cache
