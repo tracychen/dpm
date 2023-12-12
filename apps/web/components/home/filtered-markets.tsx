@@ -2,10 +2,8 @@
 
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { Icons } from "../icons";
 import { useMemo, useState } from "react";
 import { Market } from "@/models/Market.model";
-import { markets } from "@/lib/data";
 import { SelectedMarket } from "./selected-market";
 import { useSession } from "next-auth/react";
 
@@ -94,7 +92,7 @@ const Topic = ({
   </button>
 );
 
-export default function FilteredMarkets() {
+export default function FilteredMarkets({ markets }: { markets: Market[] }) {
   const [currentTopic, setCurrentTopic] = useState("All");
   const [selectedMarketId, setSelectedMarketId] = useState<string | null>(
     markets[0].id,

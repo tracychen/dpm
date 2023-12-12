@@ -57,26 +57,19 @@ function TrendingMarket({
   );
 }
 
-export default function TrendingMarkets() {
+export default function TrendingMarkets({ markets }: { markets: Market[] }) {
   return (
     <div className="flex flex-col">
       <div className="pb-2 text-2xl font-semibold tracking-tight text-accent sm:pb-8">
         Trending now
       </div>
       <div className="flex flex-col gap-y-8">
-        {markets.slice(0, 3).map((market) => (
-          <TrendingMarket
-            key={market.id}
-            id={market.id}
-            prompt={market.prompt}
-            percentChance={market.percentChance}
-            change={market.change}
-            direction={market.direction}
-            date={market.date}
-            bettedCount={market.bettedCount}
-            imageUrl={market.imageUrl}
-          />
-        ))}
+        {markets
+          .sort((a, b) => b.bettedCount - a.bettedCount)
+          .slice(0, 3)
+          .map((market, index) => (
+            <TrendingMarket key={index} {...market} />
+          ))}
       </div>
     </div>
   );
