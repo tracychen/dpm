@@ -33,7 +33,7 @@ export default function WalletConnectButton() {
                 <>
                   <Button
                     onClick={openConnectModal}
-                    className="rounded-full"
+                    className="hidden rounded-full sm:block"
                     variant="outline"
                   >
                     Create Market
