@@ -285,9 +285,7 @@ const BuySellCard = ({
                 <span>$1</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">
-                  Est. amount received
-                </span>
+                <span className="text-muted-foreground">Potential profit</span>
                 <span>${amount}</span>
               </div>
               {currentUser && (

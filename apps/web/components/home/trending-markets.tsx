@@ -75,14 +75,20 @@ export default function TrendingMarkets({
         {markets
           .sort((a, b) => b.userShares.length - a.userShares.length)
           .slice(0, 3)
-          .map((market, index) => (
-            <TrendingMarket
-              key={index}
-              {...market}
-              userCount={market.userShares.length}
-              percentChance={calculatePercentChance(market.userShares)}
-            />
-          ))}
+          .map((market, index) => {
+            const { probability } = calculatePercentChance(
+              market.options,
+              market.userShares,
+            );
+            return (
+              <TrendingMarket
+                key={index}
+                {...market}
+                userCount={market.userShares.length}
+                percentChance={probability}
+              />
+            );
+          })}
       </div>
     </div>
   );

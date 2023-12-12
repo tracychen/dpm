@@ -201,17 +201,19 @@ const MarketPost = ({
         <span className="text-muted-foreground">holds</span>
         {
           <span className="font-semibold">
-            {posterShares.map((ps, i) => (
-              <span className="font-semibold">
-                {ps.shares.toLocaleString("en-US")} shares of{" "}
-                {ps.outcome === "YES" ? (
-                  <span className="text-green-700">Yes</span>
-                ) : (
-                  <span className="text-red-700">No</span>
-                )}
-                {i !== posterShares.length - 1 && ", "}
-              </span>
-            ))}
+            {posterShares.length > 0
+              ? posterShares.map((ps, i) => (
+                  <span className="font-semibold">
+                    {ps.shares.toLocaleString("en-US")} shares of{" "}
+                    {ps.outcome === "YES" ? (
+                      <span className="text-green-700">Yes</span>
+                    ) : (
+                      <span className="text-red-700">No</span>
+                    )}
+                    {i !== posterShares.length - 1 && ", "}
+                  </span>
+                ))
+              : "0 shares"}
           </span>
         }
       </div>

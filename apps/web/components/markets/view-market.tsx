@@ -11,7 +11,6 @@ import { Separator } from "../ui/separator";
 import { MarketOptionItem } from "./market-option";
 import { BuySellCard } from "./buy-sell-card";
 import { useMemo, useState } from "react";
-import Link from "next/link";
 import { Outcome } from "@/models/Outcome.model";
 import { OrderAction } from "@/models/Order.model";
 import { Post, Reaction, User } from "@dpm/database";
@@ -41,8 +40,8 @@ const ViewMarket = ({
     OrderAction.BUY,
   );
 
-  const percentChance = useMemo(() => {
-    return calculatePercentChance(market.userShares);
+  const { probability, optionTitle } = useMemo(() => {
+    return calculatePercentChance(market.options, market.userShares);
   }, [market.userShares]);
 
   return (
@@ -50,44 +49,50 @@ const ViewMarket = ({
       <div className="flex gap-8">
         <div className="flex w-2/3 flex-col">
           <img
-            src="https://picsum.photos/seed/picsum/200/300"
+            src={market.bannerUrl || "https://picsum.photos/200/300"}
             className="h-[100px] w-full rounded-2xl object-cover sm:h-[334px]"
           />
           <div className="space-y-4 pt-6">
             <div className="flex">
-              <div className="whitespace-nowrap rounded-full bg-secondary px-4 py-[10px] font-semibold text-muted-foreground">
+              <div className="whitespace-nowrap rounded-full bg-secondary p-[10px] px-4 font-semibold text-muted-foreground">
                 {market.topic}
               </div>
             </div>
-            <div className="flex items-center justify-between text-2xl font-semibold">
-              <span>{market.title}</span>
-              <div
-                className={cn(
-                  "flex items-center",
-                  percentChance > 50 && "text-green-700",
-                  percentChance < 50 && "text-red-700",
-                  percentChance === 50 && "text-muted-foreground",
-                )}
-              >
-                <span>{percentChance}%</span>
-                <span className="ml-1 text-lg font-normal">chance</span>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-2xl font-semibold">
+                <span>{market.title}</span>
+                <div
+                  className={cn(
+                    "flex items-center",
+                    probability > 50 && "text-green-700",
+                    probability < 50 && "text-red-700",
+                    probability === 50 && "text-muted-foreground",
+                  )}
+                >
+                  <span>{probability}%</span>
+                  <span className="ml-1 text-lg font-normal">chance</span>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center">
-              <div className="flex gap-y-2">
-                <div className="flex gap-x-4">
-                  <div className="flex items-center text-muted-foreground">
-                    <Icons.timer className="mr-1 h-6 w-6" />
-                    <span className="text-lg">
-                      {formatDate(new Date(market.closeAt), false)}
-                    </span>
+              <div className="flex items-center justify-between">
+                <div className="flex gap-y-2">
+                  <div className="flex gap-x-4">
+                    <div className="flex items-center text-muted-foreground">
+                      <Icons.timer className="mr-1 h-6 w-6" />
+                      <span className="text-lg">
+                        {formatDate(new Date(market.closeAt), false)}
+                      </span>
+                    </div>
+                    <div className="flex items-center text-muted-foreground">
+                      <Icons.user className="mr-1 h-6 w-6" />
+                      <span className="text-lg">
+                        {market.userShares.length.toLocaleString("en-US")}{" "}
+                        betted
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex items-center text-muted-foreground">
-                    <Icons.user className="mr-1 h-6 w-6" />
-                    <span className="text-lg">
-                      {market.userShares.length.toLocaleString("en-US")} betted
-                    </span>
-                  </div>
+                </div>
+                <div className="text-lg text-muted-foreground">
+                  {optionTitle}
                 </div>
               </div>
             </div>
@@ -125,9 +130,7 @@ const ViewMarket = ({
                     <span className="text-sm text-muted-foreground">
                       Contract
                     </span>
-                    <Link className="text-sm text-accent" href="/">
-                      0x..TODO
-                    </Link>
+                    <span className="text-sm text-accent">0xa2...ba84</span>
                   </div>
                 </div>
               </div>

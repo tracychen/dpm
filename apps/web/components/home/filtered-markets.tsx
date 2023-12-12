@@ -16,8 +16,8 @@ function MarketCard({
   isSelectedMarket: boolean;
   setSelectedMarketId: (id: string | null) => void;
 }) {
-  const percentChance = useMemo(() => {
-    return calculatePercentChance(market.userShares);
+  const { probability, optionTitle } = useMemo(() => {
+    return calculatePercentChance(market.options, market.userShares);
   }, [market.userShares]);
 
   return (
@@ -59,12 +59,12 @@ function MarketCard({
             <div
               className={cn(
                 "flex items-center",
-                percentChance > 50 && "text-green-700",
-                percentChance < 50 && "text-red-700",
-                percentChance === 50 && "text-muted-foreground",
+                probability > 50 && "text-green-700",
+                probability < 50 && "text-red-700",
+                probability === 50 && "text-muted-foreground",
               )}
             >
-              <span className="text-xl font-semibold">{percentChance}%</span>
+              <span className="text-xl font-semibold">{probability}%</span>
               <span className="ml-1 font-normal">chance</span>
             </div>
           </div>

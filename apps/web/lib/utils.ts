@@ -1,4 +1,5 @@
 import { UserShareWithAddress } from "@/models/Market.model";
+import { Option } from "@dpm/database";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -47,29 +48,46 @@ export function formatDate(date: Date, includeTime = true) {
 }
 
 export function calculatePercentChance(
+  options: Option[],
   userShares: Partial<UserShareWithAddress>[],
 ) {
-  const yesShares = userShares.filter(
-    (userShares) => userShares.outcome === "YES",
-  );
-  const noShares = userShares.filter(
-    (userShares) => userShares.outcome === "NO",
-  );
+  let highestProbability = -1;
+  let highestProbabilityOptionTitle: string;
 
-  const yesSharesCount = yesShares.reduce(
-    (acc, userShares) => acc + userShares.shares,
-    0,
-  );
-  const noSharesCount = noShares.reduce(
-    (acc, userShares) => acc + userShares.shares,
-    0,
-  );
+  for (const option of options) {
+    const yesShares = userShares.filter(
+      (userShares) =>
+        userShares.optionId === option.id && userShares.outcome === "YES",
+    );
+    const noShares = userShares.filter(
+      (userShares) =>
+        userShares.optionId === option.id && userShares.outcome === "NO",
+    );
 
-  const totalSharesCount = yesSharesCount + noSharesCount;
+    const yesSharesCount = yesShares.reduce(
+      (acc, userShares) => acc + userShares.shares,
+      0,
+    );
+    const noSharesCount = noShares.reduce(
+      (acc, userShares) => acc + userShares.shares,
+      0,
+    );
 
-  if (totalSharesCount === 0) {
-    return 50;
+    const totalSharesCount = yesSharesCount + noSharesCount;
+
+    if (totalSharesCount === 0) {
+      continue;
+    } else {
+      const probability = Math.round((yesSharesCount / totalSharesCount) * 100);
+      if (probability > highestProbability) {
+        highestProbability = probability;
+        highestProbabilityOptionTitle = option.title;
+      }
+    }
   }
 
-  return Math.round((yesSharesCount / totalSharesCount) * 100);
+  return {
+    probability: highestProbability === -1 ? 50 : highestProbability,
+    optionTitle: highestProbabilityOptionTitle,
+  };
 }

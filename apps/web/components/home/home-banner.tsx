@@ -8,8 +8,8 @@ export default function HomeBanner({
 }: {
   market: MarketWithOptionsAndShares;
 }) {
-  const percentChance = useMemo(() => {
-    return calculatePercentChance(market.userShares);
+  const { probability, optionTitle } = useMemo(() => {
+    return calculatePercentChance(market.options, market.userShares);
   }, [market.userShares]);
 
   return (
@@ -18,7 +18,7 @@ export default function HomeBanner({
         {market.topic}
       </div>
       <img
-        src="https://picsum.photos/seed/picsum/200/300"
+        src={market.bannerUrl || "https://picsum.photos/200/300"}
         className="h-[100px] w-full rounded-2xl object-cover sm:h-[334px]"
       />
       <div className="flex items-center justify-between pb-1 pt-6 text-2xl font-semibold">
@@ -26,16 +26,16 @@ export default function HomeBanner({
         <div
           className={cn(
             "flex items-center",
-            percentChance > 50 && "text-green-700",
-            percentChance < 50 && "text-red-700",
-            percentChance === 50 && "text-muted-foreground",
+            probability > 50 && "text-green-700",
+            probability < 50 && "text-red-700",
+            probability === 50 && "text-muted-foreground",
           )}
         >
-          <span>{percentChance}%</span>
+          <span>{probability}%</span>
           <span className="ml-1 text-lg font-normal">chance</span>
         </div>
       </div>
-      <div className="flex items-center">
+      <div className="flex items-center justify-between">
         <div className="flex gap-y-2">
           <div className="flex gap-x-4">
             <div className="flex items-center text-muted-foreground">
@@ -52,6 +52,7 @@ export default function HomeBanner({
             </div>
           </div>
         </div>
+        <div className="text-lg text-muted-foreground">{optionTitle}</div>
       </div>
     </div>
   );
