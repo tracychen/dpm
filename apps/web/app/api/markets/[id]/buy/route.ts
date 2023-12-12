@@ -3,27 +3,24 @@ import { prisma } from "@dpm/database";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { getTokenBalance, sendTokens } from "@/lib/thirdweb";
+import { authenticate } from "@/lib/middleware";
 
 export async function POST(
   req: NextRequest,
   { params }: { params: { id: string } },
 ) {
   try {
-    const session = await getServerSession(authOptions);
-    if (!session?.user) {
+    const userId = await authenticate(req);
+    if (!userId) {
       return new Response(null, { status: 403 });
     }
 
-    console.log(
-      "Buying option for market and user",
-      params.id,
-      session.user.id,
-    );
+    console.log("Buying option for market and user", params.id, userId);
 
     const body = await req.json();
     const user = await prisma.user.findUnique({
       where: {
-        id: session.user.id,
+        id: userId,
       },
     });
 
@@ -34,7 +31,7 @@ export async function POST(
     let userShare = await prisma.userShare.findFirst({
       where: {
         marketId: params.id,
-        userId: session.user.id,
+        userId: userId,
         outcome: body.outcome,
         optionId: body.optionId,
       },
@@ -55,7 +52,7 @@ export async function POST(
         data: {
           shares: body.shares,
           marketId: params.id,
-          userId: session.user.id,
+          userId: userId,
           outcome: body.outcome,
           optionId: body.optionId,
         },
