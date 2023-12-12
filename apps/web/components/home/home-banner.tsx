@@ -27,7 +27,7 @@ export default function HomeBanner() {
           <span className="ml-1 text-lg font-normal">chance</span>
         </div>
       </div>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center">
         <div className="flex gap-y-2">
           <div className="flex gap-x-4">
             <div className="flex items-center text-muted-foreground">
@@ -40,24 +40,6 @@ export default function HomeBanner() {
                 {bannerMarket.bettedCount.toLocaleString("en-US")} betted
               </span>
             </div>
-          </div>
-        </div>
-        <div>
-          <div
-            className={cn(
-              "flex items-center",
-              bannerMarket.direction === "up" && "text-green-700",
-              bannerMarket.direction === "down" && "text-red-700",
-              bannerMarket.direction === "none" && "text-muted-foreground",
-            )}
-          >
-            {bannerMarket.direction === "up" && (
-              <Icons.arrowup className="mr-1 h-4 w-4" />
-            )}
-            {bannerMarket.direction === "down" && (
-              <Icons.arrowdown className="mr-1 h-4 w-4" />
-            )}
-            <span className="text-lg">{bannerMarket.change}</span>
           </div>
         </div>
       </div>

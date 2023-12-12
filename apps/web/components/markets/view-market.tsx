@@ -64,7 +64,7 @@ const ViewMarket = ({
                 <span className="ml-1 text-lg font-normal">chance</span>
               </div>
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center">
               <div className="flex gap-y-2">
                 <div className="flex gap-x-4">
                   <div className="flex items-center text-muted-foreground">
@@ -77,24 +77,6 @@ const ViewMarket = ({
                       {market.bettedCount.toLocaleString("en-US")} betted
                     </span>
                   </div>
-                </div>
-              </div>
-              <div>
-                <div
-                  className={cn(
-                    "flex items-center",
-                    market.direction === "up" && "text-green-700",
-                    market.direction === "down" && "text-red-700",
-                    market.direction === "none" && "text-muted-foreground",
-                  )}
-                >
-                  {market.direction === "up" && (
-                    <Icons.arrowup className="mr-1 h-4 w-4" />
-                  )}
-                  {market.direction === "down" && (
-                    <Icons.arrowdown className="mr-1 h-4 w-4" />
-                  )}
-                  <span className="text-lg">{market.change}</span>
                 </div>
               </div>
             </div>

@@ -26,33 +26,16 @@ function TrendingMarket({
           <div className="flex items-center justify-between text-xl font-semibold">
             <span>{prompt}</span>
           </div>
-          <div className="flex gap-x-2">
-            <div
-              className={cn(
-                "flex items-center",
-                percentChance > 50 && "text-green-700",
-                percentChance < 50 && "text-red-700",
-                percentChance === 50 && "text-muted-foreground",
-              )}
-            >
-              <span className="text-xl font-semibold">{percentChance}%</span>
-              <span className="ml-1 font-normal">chance</span>
-            </div>
-            <div
-              className={cn(
-                "flex items-center",
-                direction === "up" && "text-green-700",
-                direction === "down" && "text-red-700",
-                direction === "none" && "text-muted-foreground",
-              )}
-            >
-              {direction === "up" && <Icons.arrowup className="mr-1 h-4 w-4" />}
-              {direction === "down" && (
-                <Icons.arrowdown className="mr-1 h-4 w-4" />
-              )}
-              <Icons.arrowup className="mr-1 h-4 w-4" />
-              <span>{change}</span>
-            </div>
+          <div
+            className={cn(
+              "flex items-center",
+              percentChance > 50 && "text-green-700",
+              percentChance < 50 && "text-red-700",
+              percentChance === 50 && "text-muted-foreground",
+            )}
+          >
+            <span className="text-xl font-semibold">{percentChance}%</span>
+            <span className="ml-1 font-normal">chance</span>
           </div>
           <div className="flex items-center justify-between">
             <div className="flex gap-y-2">

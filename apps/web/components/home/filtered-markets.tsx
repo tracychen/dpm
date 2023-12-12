@@ -54,36 +54,18 @@ function MarketCard({
             <div className="line-clamp-1 flex items-center justify-between text-xl font-semibold">
               <span>{market.prompt}</span>
             </div>
-            <div className="flex gap-x-2">
-              <div
-                className={cn(
-                  "flex items-center",
-                  market.percentChance > 50 && "text-green-700",
-                  market.percentChance < 50 && "text-red-700",
-                  market.percentChance === 50 && "text-muted-foreground",
-                )}
-              >
-                <span className="text-xl font-semibold">
-                  {market.percentChance}%
-                </span>
-                <span className="ml-1 font-normal">chance</span>
-              </div>
-              <div
-                className={cn(
-                  "flex items-center",
-                  market.direction === "up" && "text-green-700",
-                  market.direction === "down" && "text-red-700",
-                  market.direction === "none" && "text-muted-foreground",
-                )}
-              >
-                {market.direction === "up" && (
-                  <Icons.arrowup className="mr-1 h-4 w-4" />
-                )}
-                {market.direction === "down" && (
-                  <Icons.arrowdown className="mr-1 h-4 w-4" />
-                )}
-                <span>{market.change}</span>
-              </div>
+            <div
+              className={cn(
+                "flex items-center",
+                market.percentChance > 50 && "text-green-700",
+                market.percentChance < 50 && "text-red-700",
+                market.percentChance === 50 && "text-muted-foreground",
+              )}
+            >
+              <span className="text-xl font-semibold">
+                {market.percentChance}%
+              </span>
+              <span className="ml-1 font-normal">chance</span>
             </div>
           </div>
         </div>
