@@ -30,6 +30,12 @@ model User {
 
   // Reactions
   reactions Reaction[]
+
+  // Markets
+  markets Market[]
+
+  // UserShares
+  userShares UserShare[]
 }
 
 model Post {
@@ -88,4 +94,82 @@ model MarketOptionHistory {
   value Float
 
   @@index([marketId, optionId])
+}
+
+enum MarketType {
+  BINARY
+  MULTIPLE_CHOICE
+}
+
+model Market {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // User
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  // Market
+  title       String
+  description String?
+  resolution  String?
+  imageUrl    String?
+  bannerUrl   String?
+  topic       String
+  marketType  MarketType
+  closeAt     DateTime
+  options     Option[]
+
+  // UserShares
+  userShares UserShare[]
+
+  @@index([userId])
+}
+
+model Option {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Market
+  market   Market @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  marketId String
+
+  // Option
+  title String?
+
+  // UserShares
+  userShares UserShare[]
+
+  @@index([marketId])
+}
+
+enum Outcome {
+  YES
+  NO
+}
+
+model UserShare {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // User
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  // Market
+  market   Market @relation(fields: [marketId], references: [id], onDelete: Cascade)
+  marketId String
+
+  option   Option @relation(fields: [optionId], references: [id])
+  optionId String
+
+  outcome Outcome
+
+  // Shares
+  shares Float
+
+  @@index([userId])
 }
