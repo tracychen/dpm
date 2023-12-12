@@ -195,10 +195,19 @@ const MarketPost = ({
             <Icons.user className="h-5 w-5" />
           </AvatarFallback>
         </Avatar>
-        <span className="font-semibold text-accent">
-          {truncateStringMiddle(post.user.evmAddress)}
-        </span>
-        <span className="text-muted-foreground">holds</span>
+        {currentUser && currentUser.id === post.user.id ? (
+          <>
+            <span className="font-semibold text-accent">You</span>{" "}
+            <span className="text-muted-foreground">hold</span>
+          </>
+        ) : (
+          <>
+            <span className="font-semibold text-accent">
+              {truncateStringMiddle(post.user.evmAddress)}
+            </span>
+            <span className="text-muted-foreground">holds</span>
+          </>
+        )}
         {
           <span className="font-semibold">
             {posterShares.length > 0
