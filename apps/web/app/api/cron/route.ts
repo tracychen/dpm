@@ -15,7 +15,6 @@ function generateRandomValueBetween(x: number, y: number): number {
 }
 
 export async function GET() {
-  // create record in market option history table
   for (const market of markets) {
     for (const option of market.options) {
       // get previous value
