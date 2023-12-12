@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@dpm/database";
-import { sdk } from "@/lib/thirdweb";
+import { sellShares } from "@/lib/web3";
 import { authenticate } from "@/lib/middleware";
 
 export async function POST(
@@ -31,7 +31,7 @@ export async function POST(
 
     const body = await req.json();
 
-    // validate body.shares is int
+    // Validate body.shares is int
     if (!Number.isInteger(body.shares)) {
       return new Response(
         JSON.stringify({
@@ -69,7 +69,31 @@ export async function POST(
       );
     }
 
-    // update shares
+    // Sell shares
+    const market = await prisma.market.findUnique({
+      where: {
+        id: params.id,
+      },
+      include: {
+        options: {
+          orderBy: {
+            id: "asc",
+          },
+        },
+      },
+    });
+    const optionIndex = market.options.findIndex(
+      (option) => option.id === body.optionId,
+    );
+    await sellShares(
+      market.contractAddress,
+      user.privateKey,
+      body.outcome === "YES" ? 1 : 0,
+      optionIndex,
+      body.shares,
+    );
+
+    // Update shares
     userShare = await prisma.userShare.update({
       where: {
         id: userShare.id,
@@ -79,20 +103,6 @@ export async function POST(
       },
     });
 
-    // Send tokens from funding address to user custodial wallet
-    const erc20Contract = await sdk.getContract(
-      process.env.ERC20_CONTRACT_ADDRESS!,
-    );
-    console.log(
-      "Sending tokens from funding address to user custodial wallet",
-      process.env.FUNDING_ADDRESS!,
-      user.custodialAddress,
-      Number(body.shares),
-    );
-    await erc20Contract.erc20.transfer(
-      user.custodialAddress,
-      Number(body.shares),
-    );
     return new Response(JSON.stringify(userShare));
   } catch (error) {
     console.error(error);

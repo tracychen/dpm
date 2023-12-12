@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { prisma } from "@dpm/database";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { getTokenBalance } from "@/lib/thirdweb";
+import { getTokenBalance } from "@/lib/web3";
 
 export async function GET(
   _: NextRequest,

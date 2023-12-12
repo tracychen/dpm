@@ -7,7 +7,7 @@ import { CreateMarketDialog } from "@/components/create-market/create-market-dia
 import WalletConnectButton from "@/components/nav/wallet-connect-button";
 import { AccountBalance } from "@/components/nav/account-balance";
 import { prisma } from "@dpm/database";
-import { getTokenBalance } from "@/lib/thirdweb";
+import { getTokenBalance } from "@/lib/web3";
 import { User } from "next-auth";
 
 interface HomeLayoutProps {

@@ -4,7 +4,7 @@ import { NextAuthOptions, SessionStrategy } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { getCsrfToken } from "next-auth/react";
 import { SiweMessage } from "siwe";
-import { airdrop } from "./airdrop";
+import { airdrop } from "./web3";
 
 export const authOptions: NextAuthOptions = {
   session: {

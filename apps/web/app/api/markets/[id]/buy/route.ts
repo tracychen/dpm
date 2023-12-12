@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@dpm/database";
-import { getTokenBalance, sendTokens } from "@/lib/thirdweb";
+import { buyShares, getTokenBalance } from "@/lib/web3";
 import { authenticate } from "@/lib/middleware";
 import { Wallet } from "ethers";
 
@@ -36,10 +36,34 @@ export async function POST(
         id: userId,
       },
     });
+
+    // Buy shares on-chain
     const privateKey = user?.privateKey;
+    const market = await prisma.market.findUnique({
+      where: {
+        id: params.id,
+      },
+      include: {
+        options: {
+          orderBy: {
+            id: "asc",
+          },
+        },
+      },
+    });
+    const optionIndex = market.options.findIndex(
+      (option) => option.id === body.optionId,
+    );
+    await buyShares(
+      market!.contractAddress,
+      privateKey!,
+      body.outcome === "YES" ? 1 : 0,
+      optionIndex,
+      body.shares,
+    );
 
     if (body.spoofNewUser) {
-      // create new user
+      // Create new user
       const custodialWallet = Wallet.createRandom();
       user = await prisma.user.create({
         data: {
@@ -73,7 +97,7 @@ export async function POST(
       },
     });
     if (userShare) {
-      // update shares
+      // Update shares
       userShare = await prisma.userShare.update({
         where: {
           id: userShare.id,
@@ -83,7 +107,7 @@ export async function POST(
         },
       });
     } else {
-      // create shares
+      // Create shares
       userShare = await prisma.userShare.create({
         data: {
           shares: body.shares,
@@ -94,14 +118,6 @@ export async function POST(
         },
       });
     }
-    // Send tokens from user custodial wallet and to funding address
-    // remove 0x from private key
-    // const privateKey = user.privateKey.slice(2);
-    await sendTokens(
-      privateKey,
-      process.env.FUNDING_ADDRESS!,
-      Number(body.shares),
-    );
 
     return new Response(JSON.stringify(userShare));
   } catch (error) {

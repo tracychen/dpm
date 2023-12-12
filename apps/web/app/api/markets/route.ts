@@ -1,6 +1,9 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@dpm/database";
 import { authenticate } from "@/lib/middleware";
+import { ContractFactory } from "ethers";
+import artifact from "@/lib/BettingMarket.json";
+import { fundingWallet } from "@/lib/web3";
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,11 +17,23 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    console.log("Creating market for user", userId);
-
     const body = await req.json();
     console.log("Creating market", body);
 
+    // Deploy market contract
+    console.log("Deploying market contract");
+    const marketContract = new ContractFactory(
+      artifact.abi,
+      artifact.bytecode,
+      fundingWallet,
+    );
+    const marketContractInstance = await marketContract.deploy(
+      body.title,
+      body.options.length,
+      process.env.ERC20_CONTRACT_ADDRESS!,
+    );
+
+    console.log("Creating market for user", userId);
     const market = await prisma.market.create({
       data: {
         title: body.title,
@@ -32,6 +47,7 @@ export async function POST(req: NextRequest) {
             title: option,
           })),
         },
+        contractAddress: marketContractInstance.address,
         closeAt: body.closeAt,
         user: {
           connect: {

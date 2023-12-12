@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
 import { NextRequest } from "next/server";
 import { authOptions } from "./auth";
+import { prisma } from "@dpm/database";
 
 export const authenticate = async (req: NextRequest) => {
   // check api key
