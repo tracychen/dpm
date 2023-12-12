@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { toast } from "../ui/use-toast";
 import { User as NextAuthUser } from "next-auth";
+import { useRouter } from "next/navigation";
 
 const MarketPost = ({
   post,
@@ -20,6 +21,8 @@ const MarketPost = ({
 }) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  const router = useRouter();
 
   const [isLikedByUser, setIsLikedByUser] = useState(
     currentUser
@@ -172,6 +175,8 @@ const MarketPost = ({
     toast({
       description: "Deleted comment",
     });
+
+    router.refresh();
   }
 
   return (
@@ -182,8 +187,8 @@ const MarketPost = ({
           <AvatarFallback>
             <Icons.user className="h-5 w-5" />
           </AvatarFallback>
-        </Avatar>{" "}
-        <span className="font-semibold">
+        </Avatar>
+        <span className="font-semibold text-accent">
           {truncateStringMiddle(post.user.evmAddress)}
         </span>
         <span className="text-muted-foreground">holds</span>
