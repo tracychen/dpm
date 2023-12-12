@@ -12,8 +12,13 @@ generator client {
 }
 
 model User {
-  id         String  @id @default(cuid())
-  evmAddress String? @unique
+  id               String  @id @default(cuid())
+  evmAddress       String? @unique
+  privateKey       String?
+  custodialAddress String?
+
+  nativeTokenAirdropHash String?
+  erc20TokenAirdropHash  String?
 
   imageUrl String?
 
