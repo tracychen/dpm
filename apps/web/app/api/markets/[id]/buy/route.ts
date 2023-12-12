@@ -1,9 +1,8 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@dpm/database";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 import { getTokenBalance, sendTokens } from "@/lib/thirdweb";
 import { authenticate } from "@/lib/middleware";
+import { Wallet } from "ethers";
 
 export async function POST(
   req: NextRequest,
@@ -15,23 +14,44 @@ export async function POST(
       return new Response(null, { status: 403 });
     }
 
-    console.log("Buying option for market and user", params.id, userId);
-
     const body = await req.json();
-    const user = await prisma.user.findUnique({
+    let user = await prisma.user.findUnique({
       where: {
         id: userId,
       },
     });
+    const privateKey = user?.privateKey;
 
-    // Check if user has enough tokens
-    const balance = await getTokenBalance(user.custodialAddress);
+    if (body.spoofNewUser) {
+      // create new user
+      const custodialWallet = Wallet.createRandom();
+      user = await prisma.user.create({
+        data: {
+          evmAddress: custodialWallet.address,
+          privateKey: custodialWallet.privateKey,
+          custodialAddress: custodialWallet.address,
+        },
+      });
+    } else {
+      // Check if user has enough tokens
+      const { displayValue } = await getTokenBalance(user.custodialAddress);
+      if (Number(displayValue) < Number(body.shares)) {
+        return new Response(
+          JSON.stringify({
+            error: "Insufficient funds",
+          }),
+          { status: 400 },
+        );
+      }
+    }
+
+    console.log("Buying option for market and user", params.id, user.id);
 
     // Check if user already has shares for this market
     let userShare = await prisma.userShare.findFirst({
       where: {
         marketId: params.id,
-        userId: userId,
+        userId: user.id,
         outcome: body.outcome,
         optionId: body.optionId,
       },
@@ -52,7 +72,7 @@ export async function POST(
         data: {
           shares: body.shares,
           marketId: params.id,
-          userId: userId,
+          userId: user.id,
           outcome: body.outcome,
           optionId: body.optionId,
         },
@@ -62,7 +82,7 @@ export async function POST(
     // remove 0x from private key
     // const privateKey = user.privateKey.slice(2);
     await sendTokens(
-      user.privateKey,
+      privateKey,
       process.env.FUNDING_ADDRESS!,
       Number(body.shares),
     );
