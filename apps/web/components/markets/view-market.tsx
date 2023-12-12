@@ -14,6 +14,7 @@ import { Post, Reaction, User } from "@dpm/database";
 import { MarketPosts } from "./market-posts";
 import { NewPostDialog } from "./new-post-dialog";
 import { User as NextAuthUser } from "next-auth";
+import { OptionGraph } from "./option-graph";
 
 const ViewMarket = ({
   market,
@@ -99,7 +100,12 @@ const ViewMarket = ({
             </div>
           </div>
           {market.type == MarketType.BINARY ? (
-            <></>
+            <>
+              <OptionGraph
+                marketId={market.id}
+                optionId={market.options[0].label}
+              />
+            </>
           ) : (
             market.options.map((option, index) => (
               <div key={index}>

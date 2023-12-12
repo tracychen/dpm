@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "../ui/use-toast";
 import { MarketOptionHistory } from "@dpm/database";
-import { Skeleton } from "../ui/skeleton";
 import dynamic from "next/dynamic";
 
 const OptionGraph = ({
