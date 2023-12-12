@@ -28,6 +28,16 @@ export async function POST(
 
     const body = await req.json();
 
+    // validate body.shares is int
+    if (!Number.isInteger(body.shares)) {
+      return new Response(
+        JSON.stringify({
+          error: "Shares must be an integer",
+        }),
+        { status: 400 },
+      );
+    }
+
     // Check if user already has shares for this market
     let userShare = await prisma.userShare.findFirst({
       where: {
