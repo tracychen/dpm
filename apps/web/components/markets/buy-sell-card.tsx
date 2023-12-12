@@ -1,4 +1,4 @@
-import { BetAction } from "@/models/Bet.model";
+import { Outcome } from "@/models/Outcome.model";
 import { Icons } from "../icons";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import {
@@ -13,15 +13,15 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { OrderAction } from "@/models/Order.model";
 import { Option } from "@dpm/database";
+import { toast } from "../ui/use-toast";
+import { useRouter } from "next/navigation";
 
-const Outcome = ({
+const OutcomeSelect = ({
   selectedAction,
-  selectedMarketOption,
   setSelectedAction,
 }: {
-  selectedAction: BetAction;
-  selectedMarketOption: Option;
-  setSelectedAction: (action: BetAction) => void;
+  selectedAction: Outcome;
+  setSelectedAction: (action: Outcome) => void;
 }) => {
   return (
     <>
@@ -42,22 +42,22 @@ const Outcome = ({
         <div
           className={cn(
             "flex w-44 items-center justify-center rounded-full px-4 py-2 hover:cursor-pointer",
-            selectedAction === BetAction.YES
+            selectedAction === Outcome.YES
               ? "bg-green-700 text-primary-foreground"
               : "border bg-background text-muted-foreground hover:bg-muted-foreground/20",
           )}
-          onClick={() => setSelectedAction(BetAction.YES)}
+          onClick={() => setSelectedAction(Outcome.YES)}
         >
           <span className="text-sm font-semibold">Yes, $1</span>
         </div>
         <div
           className={cn(
             "flex w-44 items-center justify-center rounded-full px-4 py-2 hover:cursor-pointer",
-            selectedAction === BetAction.NO
+            selectedAction === Outcome.NO
               ? "bg-red-700 text-primary-foreground"
               : "border bg-background text-muted-foreground hover:bg-muted-foreground/20",
           )}
-          onClick={() => setSelectedAction(BetAction.NO)}
+          onClick={() => setSelectedAction(Outcome.NO)}
         >
           <span className="text-sm font-semibold">No, $1</span>
         </div>
@@ -75,13 +75,78 @@ const BuySellCard = ({
   selectedOrderAction,
 }: {
   selectedMarketOption: Option;
-  selectedAction: BetAction;
+  selectedAction: Outcome;
   marketType: "BINARY" | "MULTIPLE_CHOICE";
-  setSelectedAction: (action: BetAction) => void;
+  setSelectedAction: (action: Outcome) => void;
   setSelectedOrderAction: (action: OrderAction) => void;
   selectedOrderAction: OrderAction;
 }) => {
   const [amount, setAmount] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const router = useRouter();
+
+  async function buyShares() {
+    setIsLoading(true);
+    const response = await fetch(
+      `/api/markets/${selectedMarketOption.marketId}/buy`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          shares: amount,
+          optionId: selectedMarketOption.id,
+          outcome: selectedAction,
+        }),
+      },
+    );
+    setIsLoading(false);
+
+    if (!response.ok) {
+      console.error(response);
+      return toast({
+        title: "Error",
+        description: "Failed to buy shares",
+        variant: "destructive",
+      });
+    }
+
+    toast({
+      description: `Bought ${amount} shares`,
+    });
+
+    router.refresh();
+  }
+
+  async function sellShares() {
+    setIsLoading(true);
+    const response = await fetch(
+      `/api/markets/${selectedMarketOption.marketId}/sell`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          shares: amount,
+          optionId: selectedMarketOption.id,
+          outcome: selectedAction,
+        }),
+      },
+    );
+    setIsLoading(false);
+
+    if (!response.ok) {
+      console.error(response);
+      return toast({
+        title: "Error",
+        description: "Failed to sell shares",
+        variant: "destructive",
+      });
+    }
+
+    toast({
+      description: `Sold ${amount} shares`,
+    });
+
+    router.refresh();
+  }
 
   return (
     <>
@@ -107,9 +172,8 @@ const BuySellCard = ({
             </TabsTrigger>
           </TabsList>
           <TabsContent value={OrderAction.BUY}>
-            <Outcome
+            <OutcomeSelect
               selectedAction={selectedAction}
-              selectedMarketOption={selectedMarketOption}
               setSelectedAction={setSelectedAction}
             />
             <div className="pb-4 pt-6">
@@ -134,9 +198,13 @@ const BuySellCard = ({
                 variant="default"
                 className="w-full"
                 size="full"
-                onClick={() => {}}
+                onClick={buyShares}
               >
-                <Icons.coins className="mr-2 h-4 w-4" />
+                {isLoading ? (
+                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <Icons.coins className="mr-2 h-4 w-4" />
+                )}
                 {OrderAction.BUY}
               </Button>
             </div>
@@ -156,9 +224,8 @@ const BuySellCard = ({
             </div>
           </TabsContent>
           <TabsContent value={OrderAction.SELL}>
-            <Outcome
+            <OutcomeSelect
               selectedAction={selectedAction}
-              selectedMarketOption={selectedMarketOption}
               setSelectedAction={setSelectedAction}
             />
             <div className="pb-4 pt-6">
@@ -179,9 +246,13 @@ const BuySellCard = ({
                 variant="default"
                 className="w-full"
                 size="full"
-                onClick={() => {}}
+                onClick={sellShares}
               >
-                <Icons.coins className="mr-2 h-4 w-4" />
+                {isLoading ? (
+                  <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                ) : (
+                  <Icons.coins className="mr-2 h-4 w-4" />
+                )}
                 {OrderAction.SELL}
               </Button>
             </div>

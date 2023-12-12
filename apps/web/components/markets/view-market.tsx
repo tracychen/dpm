@@ -7,7 +7,7 @@ import { MarketOptionItem } from "./market-option";
 import { BuySellCard } from "./buy-sell-card";
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { BetAction } from "@/models/Bet.model";
+import { Outcome } from "@/models/Outcome.model";
 import { OrderAction } from "@/models/Order.model";
 import { Market, Option, Post, Reaction, User, UserShare } from "@dpm/database";
 import { MarketPosts } from "./market-posts";
@@ -33,7 +33,7 @@ const ViewMarket = ({
   const [selectedMarketOption, setSelectedMarketOption] = useState(
     market.options[0],
   );
-  const [selectedBetAction, setSelectedBetAction] = useState(BetAction.YES);
+  const [selectedBetAction, setSelectedBetAction] = useState(Outcome.YES);
   const [selectedOrderAction, setSelectedOrderAction] = useState(
     OrderAction.BUY,
   );

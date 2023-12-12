@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Icons } from "../icons";
 import { Button } from "../ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { BetAction } from "@/models/Bet.model";
+import { Outcome } from "@/models/Outcome.model";
 import { cn } from "@/lib/utils";
 import { OrderAction } from "@/models/Order.model";
 import { OptionGraph } from "./option-graph";
@@ -20,9 +20,9 @@ const MarketOptionItem = ({
   marketId: string;
   marketOption: Option;
   isSelected: boolean;
-  selectedBetAction: BetAction;
+  selectedBetAction: Outcome;
   setSelectedMarketOption: (marketOption: Option) => void;
-  setSelectedBetAction: (betAction: BetAction) => void;
+  setSelectedBetAction: (betAction: Outcome) => void;
   selectedOrderAction: OrderAction;
 }) => {
   const [showAdditionalData, setShowAdditionalData] = useState(false);
@@ -46,13 +46,13 @@ const MarketOptionItem = ({
             className={cn(
               "z-5 w-44",
               isSelected &&
-                selectedBetAction === BetAction.YES &&
+                selectedBetAction === Outcome.YES &&
                 "bg-green-700 text-primary-foreground",
             )}
             size="full"
             onClick={(e) => {
               setSelectedMarketOption(marketOption);
-              setSelectedBetAction(BetAction.YES);
+              setSelectedBetAction(Outcome.YES);
               e.stopPropagation();
             }}
           >
@@ -63,13 +63,13 @@ const MarketOptionItem = ({
             className={cn(
               "z-5 w-44",
               isSelected &&
-                selectedBetAction === BetAction.NO &&
+                selectedBetAction === Outcome.NO &&
                 "bg-red-700 text-primary-foreground",
             )}
             size="full"
             onClick={(e) => {
               setSelectedMarketOption(marketOption);
-              setSelectedBetAction(BetAction.NO);
+              setSelectedBetAction(Outcome.NO);
               e.stopPropagation();
             }}
           >
