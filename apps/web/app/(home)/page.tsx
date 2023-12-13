@@ -44,7 +44,13 @@ export default async function HomePage() {
     <div className="flex flex-col gap-y-10">
       <div className="hidden gap-x-8 md:flex">
         <div className="w-2/3">
-          <HomeBanner market={markets[0]} />
+          <HomeBanner
+            market={
+              markets.find(
+                (market) => market.id === "clq30l12g000ejt081gbbxrfp",
+              ) || markets[0]
+            }
+          />
         </div>
         <div className="w-1/3">
           <TrendingMarkets markets={markets} />
