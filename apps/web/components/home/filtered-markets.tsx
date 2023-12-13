@@ -178,7 +178,12 @@ export default function FilteredMarkets({
             key={topic}
             topic={topic}
             selected={topic === currentTopic}
-            onClick={() => setCurrentTopic(topic)}
+            onClick={() => {
+              setCurrentTopic(topic);
+              setSelectedMarketId(
+                markets.find((market) => market.topic === topic)?.id || null,
+              );
+            }}
           />
         ))}
       </div>
