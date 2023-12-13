@@ -3,6 +3,7 @@ import { prisma } from "@dpm/database";
 import { buyShares, getTokenBalance } from "@/lib/web3";
 import { authenticate } from "@/lib/middleware";
 import { Wallet } from "ethers";
+import { updateMarketOptionHistory } from "@/lib/marketHistory";
 
 export async function POST(
   req: NextRequest,
@@ -119,6 +120,17 @@ export async function POST(
       });
     }
 
+    // update market option history
+    const updatedMarket = await prisma.market.findUnique({
+      where: {
+        id: params.id,
+      },
+      include: {
+        options: true,
+        userShares: true,
+      },
+    });
+    await updateMarketOptionHistory(updatedMarket);
     return new Response(JSON.stringify(userShare));
   } catch (error) {
     console.error(error);
