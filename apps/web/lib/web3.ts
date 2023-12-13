@@ -35,7 +35,7 @@ export const airdrop = async (
   const erc20Contract = await sdk.getContract(
     process.env.ERC20_CONTRACT_ADDRESS!,
   );
-  const transferTx = await erc20Contract.erc20.transfer(address, "10"); // 10
+  const transferTx = await erc20Contract.erc20.transfer(address, "100");
   console.log("ERC20 transfer tx: ", transferTx);
 
   return {
