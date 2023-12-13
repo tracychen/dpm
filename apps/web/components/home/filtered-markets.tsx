@@ -17,7 +17,7 @@ function MarketCard({
   isSelectedMarket: boolean;
   setSelectedMarketId: (id: string | null) => void;
 }) {
-  const { probability } = useMemo(() => {
+  const { probability, optionTitle } = useMemo(() => {
     return calculatePercentChance(market.options, market.userShares);
   }, [market.userShares]);
 
@@ -59,14 +59,17 @@ function MarketCard({
             </div>
             <div
               className={cn(
-                "flex items-center",
+                "flex items-center space-x-1",
                 probability > 50 && "text-green-700",
                 probability < 50 && "text-red-700",
                 probability === 50 && "text-muted-foreground",
               )}
             >
               <span className="text-xl font-semibold">{probability}%</span>
-              <span className="ml-1 font-normal">chance</span>
+              <span className="font-normal">chance</span>
+              {optionTitle && (
+                <span className="text-muted-foreground">• {optionTitle}</span>
+              )}
             </div>
           </div>
         </div>
@@ -76,7 +79,7 @@ function MarketCard({
 }
 
 function MobileMarketCard({ market }: { market: MarketWithOptionsAndShares }) {
-  const { probability } = useMemo(() => {
+  const { probability, optionTitle } = useMemo(() => {
     return calculatePercentChance(market.options, market.userShares);
   }, [market.userShares]);
 
@@ -108,16 +111,19 @@ function MobileMarketCard({ market }: { market: MarketWithOptionsAndShares }) {
             </div>
             <div
               className={cn(
-                "flex items-center",
+                "flex items-center space-x-1",
                 probability > 50 && "text-green-700",
                 probability < 50 && "text-red-700",
                 probability === 50 && "text-muted-foreground",
               )}
             >
               <span className="font-semibold md:text-xl">{probability}%</span>
-              <span className="md:text-md ml-1 text-sm font-normal">
-                chance
-              </span>
+              <span className="md:text-md text-sm font-normal">chance</span>
+              {optionTitle && (
+                <span className="md:text-md text-sm text-muted-foreground">
+                  • {optionTitle}
+                </span>
+              )}
             </div>
           </div>
         </div>
