@@ -100,6 +100,18 @@ const BuySellCard = ({
       .reduce((acc, share) => acc + share.shares, 0);
   }, [userShares, selectedMarketOption, selectedAction]);
 
+  function checkLoggedIn() {
+    if (!currentUser) {
+      toast({
+        title: "Error",
+        description: "You must be logged in to buy or sell shares",
+        variant: "destructive",
+      });
+      return false;
+    }
+    return true;
+  }
+
   async function buyShares() {
     setIsLoading(true);
     const response = await fetch(
@@ -216,7 +228,10 @@ const BuySellCard = ({
                 variant="default"
                 className="w-full"
                 size="full"
-                onClick={buyShares}
+                onClick={async () => {
+                  if (!checkLoggedIn()) return;
+                  await buyShares();
+                }}
                 disabled={amount < 1}
               >
                 {isLoading ? (
@@ -268,7 +283,10 @@ const BuySellCard = ({
                 variant="default"
                 className="w-full"
                 size="full"
-                onClick={sellShares}
+                onClick={async () => {
+                  if (!checkLoggedIn()) return;
+                  await sellShares();
+                }}
                 disabled={amount < 1 && amount > balance}
               >
                 {isLoading ? (
