@@ -36,9 +36,8 @@ const OptionGraph = ({
         return [new Date(moh.createdAt).getTime(), +moh.value.toFixed(2)];
       });
       const formattedNoData = formattedYesData.map((d) => {
-        return [d[0], 1 - d[1]];
+        return [d[0], Math.abs(100 - d[1])];
       });
-      console.log(formattedYesData, formattedNoData);
       setYesData(formattedYesData);
       setNoData(formattedNoData);
     }
