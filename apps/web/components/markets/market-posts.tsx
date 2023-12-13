@@ -290,7 +290,7 @@ const MarketPosts = ({
   userShares: UserShareWithAddress[];
 }) => {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex w-full flex-col gap-6">
       {posts.map((post) => (
         <MarketPost
           key={post.id}

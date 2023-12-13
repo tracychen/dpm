@@ -43,7 +43,7 @@ const SelectedMarket = ({
   }, [market]);
 
   return (
-    <div className="flex flex-col gap-y-4">
+    <div className="flex w-full flex-col gap-y-4">
       <div className="flex text-2xl font-semibold">
         <span>{market.title}</span>
       </div>
