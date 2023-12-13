@@ -50,7 +50,7 @@ function TrendingMarket({
                 </div>
                 <div className="flex items-center text-sm text-muted-foreground">
                   <Icons.user className="mr-1 h-4 w-4" />
-                  <span>{userCount.toLocaleString("en-US")} betted</span>
+                  <span>{userCount.toLocaleString("en-US")} bet</span>
                 </div>
               </div>
             </div>

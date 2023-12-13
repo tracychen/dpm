@@ -87,8 +87,7 @@ const ViewMarket = ({
                     <div className="hidden items-center text-muted-foreground md:flex">
                       <Icons.user className="mr-1 h-6 w-6" />
                       <span className="md:text-lg">
-                        {market.userShares.length.toLocaleString("en-US")}{" "}
-                        betted
+                        {market.userShares.length.toLocaleString("en-US")} bet
                       </span>
                     </div>
                   </div>

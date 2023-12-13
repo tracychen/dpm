@@ -54,7 +54,7 @@ const SelectedMarket = ({
         </div>
         <div className="flex items-center text-sm text-muted-foreground">
           <Icons.user className="mr-1 h-4 w-4" />
-          <span>{market.userShares.length.toLocaleString("en-US")} betted</span>
+          <span>{market.userShares.length.toLocaleString("en-US")} bet</span>
         </div>
       </div>
       <Button variant="default" size="full" className="w-44">

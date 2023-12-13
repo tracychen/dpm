@@ -51,7 +51,7 @@ export default function HomeBanner({
             <div className="flex items-center text-muted-foreground">
               <Icons.user className="mr-1 h-6 w-6" />
               <span className="text-lg">
-                {market.userShares.length.toLocaleString("en-US")} betted
+                {market.userShares.length.toLocaleString("en-US")} bet
               </span>
             </div>
           </div>
