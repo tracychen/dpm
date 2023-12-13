@@ -19,6 +19,7 @@ import { NewPostDialog } from "./new-post-dialog";
 import { User as NextAuthUser } from "next-auth";
 import { MarketWithOptionsAndShares } from "@/models/Market.model";
 import { BinaryOption } from "./binary-option";
+import Link from "next/link";
 
 const ViewMarket = ({
   market,
@@ -144,7 +145,14 @@ const ViewMarket = ({
                     <span className="text-sm text-muted-foreground">
                       Contract
                     </span>
-                    <span className="text-sm text-accent">0xa2...ba84</span>
+                    <Link
+                      className="text-sm text-accent"
+                      href={`https://testnet.snowtrace.io/address/${market.contractAddress}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {truncateStringMiddle(market.contractAddress, 8)}
+                    </Link>
                   </div>
                 </div>
               </div>
