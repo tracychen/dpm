@@ -54,26 +54,18 @@ export function calculatePercentChance(
   let highestProbability = -1;
   let highestProbabilityOptionTitle: string;
 
+  const totalSharesCount = userShares.reduce(
+    (acc, userShares) => acc + userShares.shares,
+    0,
+  );
+
   for (const option of options) {
-    const yesShares = userShares.filter(
-      (userShares) =>
-        userShares.optionId === option.id && userShares.outcome === "YES",
-    );
-    const noShares = userShares.filter(
-      (userShares) =>
-        userShares.optionId === option.id && userShares.outcome === "NO",
-    );
-
-    const yesSharesCount = yesShares.reduce(
-      (acc, userShares) => acc + userShares.shares,
-      0,
-    );
-    const noSharesCount = noShares.reduce(
-      (acc, userShares) => acc + userShares.shares,
-      0,
-    );
-
-    const totalSharesCount = yesSharesCount + noSharesCount;
+    const yesSharesCount = userShares
+      .filter(
+        (userShares) =>
+          userShares.optionId === option.id && userShares.outcome === "YES",
+      )
+      .reduce((acc, userShares) => acc + userShares.shares, 0);
 
     if (totalSharesCount === 0) {
       continue;
