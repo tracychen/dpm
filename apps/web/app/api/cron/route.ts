@@ -21,7 +21,7 @@ export async function GET() {
 
       const totalShares = yesShares + noShares;
 
-      const yesProbability = totalShares === 0 ? 50 : yesShares / totalShares;
+      const yesProbability = totalShares === 0 ? 0.5 : yesShares / totalShares;
 
       const moh = await prisma.marketOptionHistory.create({
         data: {

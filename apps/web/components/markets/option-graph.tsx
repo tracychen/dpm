@@ -14,14 +14,17 @@ const OptionGraph = ({
 }) => {
   const [yesData, setYesData] = useState([]);
   const [noData, setNoData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
   useEffect(() => {
     async function getOptionGraph() {
+      setIsLoading(true);
       const response = await fetch(
         `/api/markets/${marketId}/options?optionId=${optionId}`,
       );
 
+      setIsLoading(false);
       if (!response.ok) {
         console.error(response);
         return toast({
@@ -33,12 +36,15 @@ const OptionGraph = ({
 
       const mohs = await response.json();
       const formattedYesData = mohs.map((moh: MarketOptionHistory) => {
-        return [new Date(moh.createdAt).getTime(), +moh.value.toFixed(2)];
+        return [
+          new Date(moh.createdAt).getTime(),
+          +(moh.value * 100).toFixed(2),
+        ];
       });
+      setYesData(formattedYesData);
       const formattedNoData = formattedYesData.map((d) => {
         return [d[0], Math.abs(100 - d[1])];
       });
-      setYesData(formattedYesData);
       setNoData(formattedNoData);
     }
     getOptionGraph();
@@ -46,15 +52,16 @@ const OptionGraph = ({
 
   return (
     <>
-      {typeof window !== "undefined" && (
+      {!isLoading && typeof window !== "undefined" && (
         <Chart
           options={{
             yaxis: {
               labels: {
                 formatter: (value) => {
-                  return value.toFixed(2);
+                  return value.toFixed(0);
                 },
               },
+              max: 100,
             },
             dataLabels: {
               enabled: false,
