@@ -7,6 +7,7 @@ function TrendingMarket({
   id,
   title,
   percentChance,
+  optionTitle,
   closeAt,
   imageUrl,
   userCount,
@@ -14,6 +15,7 @@ function TrendingMarket({
   id: string;
   title: string;
   percentChance: number;
+  optionTitle: string;
   closeAt: Date;
   imageUrl: string;
   userCount: number;
@@ -32,14 +34,19 @@ function TrendingMarket({
           </div>
           <div
             className={cn(
-              "flex items-center",
+              "flex items-center space-x-1",
               percentChance > 50 && "text-green-700",
               percentChance < 50 && "text-red-700",
               percentChance === 50 && "text-muted-foreground",
             )}
           >
             <span className="text-xl font-semibold">{percentChance}%</span>
-            <span className="ml-1 font-normal">chance</span>
+            <span className="font-normal">chance</span>
+            {optionTitle && (
+              <span className="md:text-md text-sm text-muted-foreground">
+                • {optionTitle}
+              </span>
+            )}
           </div>
           <div className="flex items-center justify-between">
             <div className="flex gap-y-2">
@@ -76,7 +83,7 @@ export default function TrendingMarkets({
           .sort((a, b) => b.userShares.length - a.userShares.length)
           .slice(0, 3)
           .map((market, index) => {
-            const { probability } = calculatePercentChance(
+            const { probability, optionTitle } = calculatePercentChance(
               market.options,
               market.userShares,
             );
@@ -86,6 +93,7 @@ export default function TrendingMarkets({
                 {...market}
                 userCount={market.userShares.length}
                 percentChance={probability}
+                optionTitle={optionTitle}
               />
             );
           })}
